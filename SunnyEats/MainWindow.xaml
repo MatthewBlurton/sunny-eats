@@ -1,0 +1,45 @@
+﻿<Window x:Class="SunnyEats.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SunnyEats"
+        mc:Ignorable="d"
+        Title="SunnyEats" Height="450" Width="800"
+        MinHeight="240" MinWidth="320" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <ListView x:Name="ListViewRecipes" Grid.Row="0" Margin="10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Width="80" >
+                        <GridViewColumnHeader x:Name="gvchRecipe" Content="Recipe" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Category.Name}" Width="100" >
+                        <GridViewColumnHeader x:Name="gvchCategory" Content="Category" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding PrepTime}" Width="70" >
+                        <GridViewColumnHeader x:Name="gvchPrepTime" Content="Prep Time" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding NumberOfServes}" Width="120" >
+                        <GridViewColumnHeader x:Name="gvchNumServes" Content="Number of Serves" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Cal_kJ_PerServe}" Width="100">
+                        <GridViewColumnHeader x:Name="gvchPerServe" Content="Cal kJ per serve" SizeChanged="RecipeGridViewColumnHeader_SizeChanged"/>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Grid Grid.Row="1">
+            <Button Content="Add" HorizontalAlignment="Left" Margin="10,0,0,10" Width="75" Height="22" VerticalAlignment="Bottom"/>
+            <Button Content="Modify" HorizontalAlignment="Left" Margin="90,0,0,10" Width="75" Height="22" VerticalAlignment="Bottom"/>
+            <Button Content="Delete" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="22" VerticalAlignment="Bottom"/>
+            <TextBox Height="23" Margin="210,0,90,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            <TextBlock HorizontalAlignment="Left" Margin="170,3,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Top"/>
+
+        </Grid>
+    </Grid>
+</Window>
