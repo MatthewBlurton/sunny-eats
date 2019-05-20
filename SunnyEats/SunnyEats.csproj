@@ -86,8 +86,9 @@
     <Compile Include="EntityDataModel\Tables\Recipe.cs" />
     <Compile Include="EntityDataModel\Tables\RecipeIngredient.cs" />
     <Compile Include="EntityDataModel\Tables\RecipeStep.cs" />
-    <Compile Include="Models\Recipe.cs" />
-    <Compile Include="ViewModels\RecipeListViewModel.cs" />
+    <Compile Include="RecipeWindow.xaml.cs">
+      <DependentUpon>RecipeWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -100,6 +101,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RecipeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -154,6 +159,8 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="ViewModels\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
