@@ -40,45 +40,10 @@ namespace SunnyEats
 
             this.ListViewRecipes.ItemsSource = recipes;
 
-            // LINQ Query inner join Recipe with Category
-            //var recipeItems = from r in dBContext.Recipes
-            //                  join c in dBContext.Categories
-            //                  on r.CategoryID equals c.ID into rc
-            //                  from subrecipe in rc.DefaultIfEmpty()
-            //                  select new
-            //                  {
-            //                      r.Name,
-            //                      CategoryName = subrecipe.Name ?? String.Empty,
-            //                      r.PrepTime,
-            //                      r.NumberOfServes
-            //                  };
-
-            // Query section without using LINQ
-            //// Get data from MenuDB
-            //var connectionString = ConfigurationManager.ConnectionStrings["SunnyEats.Properties.Settings.MenuDBConnectionString"].ConnectionString;
-            //using (SqlConnection connection = new SqlConnection(connectionString))
-            //{
-            //    connection.Open();
-            //    Console.WriteLine("Connection Successful");
-            //    SqlCommand command = connection.CreateCommand();
-            //    command.CommandType = System.Data.CommandType.Text;
-            //    command.CommandText = "SELECT [Name], [CategoryID] FROM [dbo].[Recipe]";
-            //    SqlDataReader reader = command.ExecuteReader();
-            //    while (reader.Read())
-            //    {
-            //        var recipe = new Recipe
-            //        {
-            //            Name = reader.GetString(0),
-            //            Category = reader.GetInt32(1)
-            //        };
-            //        Recipes.Add(recipe);
-            //        Console.WriteLine(reader.GetString(0));
-            //    }
-            //    reader.Close();
-            //}
-
-            //ListViewRecipes.ItemsSource = Recipes;
+            this.recipeWindow = new RecipeWindow();
         }
+
+        private RecipeWindow recipeWindow;
 
         private ObservableCollection<Recipe> recipes;
         public ObservableCollection<Recipe> Recipes
@@ -89,6 +54,16 @@ namespace SunnyEats
                     recipes = new ObservableCollection<Recipe>();
                 return recipes;
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            recipeWindow.Owner = this;
+        }
+
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            recipeWindow.ShowDialog();
         }
 
         private void RecipeGridViewColumnHeader_SizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
@@ -103,12 +78,6 @@ namespace SunnyEats
         {
             return curWidth > minWidth ? curWidth : minWidth;
         }
-
-        //public class Recipe
-        //{
-        //    public String Name { get; set; }
-        //    public int Category { get; set; }
-        //}
     }
 
     

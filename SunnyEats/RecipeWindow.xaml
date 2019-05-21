@@ -14,27 +14,27 @@
         <Grid>
             <!--Name-->
             <Label Content="Name" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-            <TextBox HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" MaxLength="50"/>
+            <TextBox x:Name="txbxName" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" MaxLength="50"/>
             <!--Category.ID-->
             <!--Category.Name-->
             <Label Content="Category" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top"/>
-            <ComboBox HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="120"/>
+            <ComboBox x:Name="cmbxCategory" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="120"/>
             <!--PrepTime-->
             <Label Content="Preparation Time" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top"/>
-            <TextBox HorizontalAlignment="Left" Height="23" Margin="10,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+            <TextBox x:Name="txbxPrepTime" HorizontalAlignment="Left" Height="23" Margin="10,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
             <!--NumberOfServes-->
             <Label Content="Number of Serves" HorizontalAlignment="Left" Margin="10,171,0,0" VerticalAlignment="Top"/>
-            <TextBox HorizontalAlignment="Left" Height="23" Margin="10,197,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+            <TextBox x:Name="txbxNumServes" HorizontalAlignment="Left" Height="23" Margin="10,197,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
             <!--Cal_kJ_PerServe-->
             <Label Content="Calories or Kilojules Per Serve" HorizontalAlignment="Left" Margin="10,225,0,0" VerticalAlignment="Top"/>
-            <TextBox HorizontalAlignment="Left" Height="23" Margin="10,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+            <TextBox x:Name="txbxCalkJPerServe" HorizontalAlignment="Left" Height="23" Margin="10,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
             
-            <Button Content="Submit" HorizontalAlignment="Left" Margin="10,0,0,10" Width="75" Height="20" VerticalAlignment="Bottom" Click="Button_Click"/>
+            <Button Content="Submit" HorizontalAlignment="Left" Margin="10,0,0,10" Width="75" Height="20" VerticalAlignment="Bottom" />
             <Button Content="Cancel" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
 
 
         </Grid>
-        <TextBox Grid.Column="1" Margin="10,41,10,10" TextWrapping="Wrap" MaxLength="255"/>
+        <TextBox x:Name="txbxDescription" Grid.Column="1" Margin="10,41,10,10" TextWrapping="Wrap" MaxLength="255"/>
         <Label Content="Description" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Column="1"/>
 
 
