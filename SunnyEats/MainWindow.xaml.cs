@@ -90,12 +90,18 @@ namespace SunnyEats
         {
             Recipe selectedRecipe = (Recipe)this.ListViewRecipes.SelectedItem ?? null;
 
+            string messageBoxText = "Could not delete recipe. There are currently no recipes selected";
+            string caption = "Error deleting recipe";
+            MessageBoxButton button = MessageBoxButton.OK;
+            MessageBoxImage icon = MessageBoxImage.Error;
+
+            // Only proceed with removing the recipe if a recipe is selected
             if (selectedRecipe != null)
             {
-                string messageBoxText = "Are you sure you want to delete " + selectedRecipe.Name + "\r\nThis action cannot be undone.";
-                string caption = "Delete " + selectedRecipe.Name;
-                MessageBoxButton button = MessageBoxButton.YesNo;
-                MessageBoxImage icon = MessageBoxImage.Warning;
+                messageBoxText = "Are you sure you want to delete " + selectedRecipe.Name + "\r\nThis action cannot be undone.";
+                caption = "Delete " + selectedRecipe.Name;
+                button = MessageBoxButton.YesNo;
+                icon = MessageBoxImage.Warning;
 
                 MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.No);
 
@@ -105,8 +111,13 @@ namespace SunnyEats
                     this.dBContext.SaveChanges();
 
                     this.Recipes.Remove(selectedRecipe);
+                    
+                    // exit the method
+                    return;
                 }
             }
+
+            MessageBox.Show(messageBoxText, caption, button, icon);
         }
     }
 
