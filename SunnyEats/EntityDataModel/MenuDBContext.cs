@@ -25,16 +25,6 @@ namespace SunnyEats.EntityDataModel
                 .HasMany(e => e.RecipeIngredients)
                 .WithRequired(e => e.Ingredient)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Recipe>()
-                .HasMany(e => e.RecipeIngredients)
-                .WithRequired(e => e.Recipe)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Recipe>()
-                .HasMany(e => e.RecipeSteps)
-                .WithRequired(e => e.Recipe)
-                .WillCascadeOnDelete(false);
         }
     }
 }

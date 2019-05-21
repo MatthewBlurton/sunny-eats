@@ -31,9 +31,9 @@ namespace SunnyEats
         {
             InitializeComponent();
 
-            MenuDBContext dBContext = new MenuDBContext();
+            this.dBContext = new MenuDBContext();
 
-            foreach (var item in dBContext.Recipes)
+            foreach (var item in this.dBContext.Recipes)
             {
                 Recipes.Add(item);
             }
@@ -44,6 +44,8 @@ namespace SunnyEats
         }
 
         private RecipeWindow recipeWindow;
+
+        private MenuDBContext dBContext;
 
         private ObservableCollection<Recipe> recipes;
         public ObservableCollection<Recipe> Recipes
@@ -78,7 +80,35 @@ namespace SunnyEats
         {
             return curWidth > minWidth ? curWidth : minWidth;
         }
+
+        private void BtnModify_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            Recipe selectedRecipe = (Recipe)this.ListViewRecipes.SelectedItem ?? null;
+
+            if (selectedRecipe != null)
+            {
+                string messageBoxText = "Are you sure you want to delete " + selectedRecipe.Name + "\r\nThis action cannot be undone.";
+                string caption = "Delete " + selectedRecipe.Name;
+                MessageBoxButton button = MessageBoxButton.YesNo;
+                MessageBoxImage icon = MessageBoxImage.Warning;
+
+                MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.No);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    this.dBContext.Recipes.Remove(selectedRecipe);
+                    this.dBContext.SaveChanges();
+
+                    this.Recipes.Remove(selectedRecipe);
+                }
+            }
+        }
     }
 
-    
+
 }

@@ -35,8 +35,8 @@
         </ListView>
         <Grid Grid.Row="1">
             <Button x:Name="btnAdd" Content="Add" HorizontalAlignment="Left" Margin="10,0,0,10" Width="75" Height="22" VerticalAlignment="Bottom" Click="BtnAdd_Click" />
-            <Button x:Name="btnModify" Content="Modify" HorizontalAlignment="Left" Margin="90,0,0,10" Width="75" Height="22" VerticalAlignment="Bottom"/>
-            <Button x:Name="btnDelete" Content="Delete" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="22" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnModify" Content="Modify" HorizontalAlignment="Left" Margin="90,0,0,10" Width="75" Height="22" VerticalAlignment="Bottom" Click="BtnModify_Click"/>
+            <Button x:Name="btnDelete" Content="Delete" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="22" VerticalAlignment="Bottom" Click="BtnDelete_Click"/>
             <TextBox Height="23" Margin="210,0,90,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
             <TextBlock HorizontalAlignment="Left" Margin="170,3,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Top"/>
 
