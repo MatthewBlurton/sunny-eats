@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
         Title="RecipeWindow" Height="460" Width="800"
-        MinHeight="240" MinWidth="320">
+        MinHeight="240" MinWidth="320" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />

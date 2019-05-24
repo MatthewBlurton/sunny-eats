@@ -62,6 +62,16 @@ namespace SunnyEats
             recipeWindow.ShowDialog();
         }
 
+        private void BtnModify_Click(object sender, RoutedEventArgs e)
+        {
+            this.recipeWindow = new RecipeWindow();
+            recipeWindow.Owner = this;
+
+            // TODO: error trap incase no recipe is selected
+            recipeWindow.Recipe = (Recipe) ListViewRecipes.SelectedItem;
+            recipeWindow.ShowDialog();
+        }
+
         // Ensure that the size of each columns for the Recipe view remains above or equal to 54 pixels
         private void RecipeGridViewColumnHeader_SizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
         {
@@ -74,11 +84,6 @@ namespace SunnyEats
         private double LimitWidth(double minWidth, double curWidth)
         {
             return curWidth > minWidth ? curWidth : minWidth;
-        }
-
-        private void BtnModify_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void BtnDelete_Click(object sender, RoutedEventArgs e)

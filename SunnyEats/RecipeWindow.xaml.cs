@@ -29,24 +29,50 @@ namespace SunnyEats
             dbContext = new MenuDBContext();
 
             categories = new ObservableCollection<Category>();
-            foreach (Category category in dbContext.Categories)
-            {
-                categories.Add(category);
-            }
-
-            Recipe recipe = dbContext.Recipes.FirstOrDefault();
             steps = new ObservableCollection<RecipeStep>();
-            foreach (RecipeStep step in recipe.RecipeSteps)
-            {
-                steps.Add(step);
-            }
 
             cmbxCategory.ItemsSource = categories;
             ListViewSteps.ItemsSource = steps;
         }
 
+        public RecipeWindow(Recipe recipe)
+        {
+            
+        }
+
         private MenuDBContext dbContext;
         ObservableCollection<Category> categories;
         ObservableCollection<RecipeStep> steps;
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // if a recipe is included, populate the steps with the recipe's steps
+            if (this.Recipe != null)
+            {
+                foreach (RecipeStep step in this.Recipe.RecipeSteps)
+                {
+                    steps.Add(step);
+                }
+            }
+
+            // Load all the categories
+            foreach (Category category in dbContext.Categories)
+            {
+                this.categories.Add(category);
+            }
+        }
+
+        private Recipe recipe;
+        public Recipe Recipe
+        {
+            get
+            {
+                return this.recipe;
+            }
+            set
+            {
+                this.recipe = value;
+            }
+        }
     }
 }
