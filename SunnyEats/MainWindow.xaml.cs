@@ -64,11 +64,8 @@ namespace SunnyEats
 
         private void BtnModify_Click(object sender, RoutedEventArgs e)
         {
-            this.recipeWindow = new RecipeWindow();
+            this.recipeWindow = new RecipeWindow((Recipe) ListViewRecipes.SelectedItem);
             recipeWindow.Owner = this;
-
-            // TODO: error trap incase no recipe is selected
-            recipeWindow.Recipe = (Recipe) ListViewRecipes.SelectedItem;
             recipeWindow.ShowDialog();
         }
 

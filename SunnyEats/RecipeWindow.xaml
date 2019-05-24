@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
         Title="RecipeWindow" Height="460" Width="800"
-        MinHeight="240" MinWidth="320" Loaded="Window_Loaded">
+        MinHeight="240" MinWidth="320" Loaded="Window_Loaded"
+        Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -23,24 +24,33 @@
             <Grid>
                 <!--Name-->
                 <Label Content="Name" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="txbxName" HorizontalAlignment="Left" Height="23" Margin="0,26,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" MaxLength="50"/>
+                <TextBox x:Name="txbxName" Height="23" HorizontalAlignment="Left" Margin="0,26,5,0" TextWrapping="NoWrap" VerticalAlignment="Top" MaxLength="50"
+                         Width="255"
+                         Text="{Binding Name, Mode=OneTime}" />
                 <!-- Description -->
                 <Label Content="Description" HorizontalAlignment="Left" Margin="0,54,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="txbxDescription" HorizontalAlignment="Left" Height="69" Margin="0,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" MaxLength="255" />
+                <TextBox x:Name="txbxDescription" Height="69" Margin="0,80,5,0" TextWrapping="Wrap"
+                         HorizontalAlignment="Left" VerticalAlignment="Top" MaxLength="255"
+                         VerticalScrollBarVisibility="Auto" Width="250"
+                         Text="{Binding Description, Mode=OneTime}" />
                 <!--Category.ID-->
                 <!--Category.Name-->
                 <Label Content="Category" HorizontalAlignment="Left" Margin="0,154,0,0" VerticalAlignment="Top"/>
                 <ComboBox x:Name="cmbxCategory" HorizontalAlignment="Left" Margin="0,180,0,0" VerticalAlignment="Top" Width="120"
-                      DisplayMemberPath="{Binding Source=Name}" SelectedValuePath="{Binding Source=Id}"/>
+                      DisplayMemberPath="{Binding Source=Name}" SelectedValuePath="{Binding Source=Id}"
+                      SelectedIndex="{Binding Category.ID, Mode=OneTime}"/>
                 <!--PrepTime-->
                 <Label Content="Preparation Time" HorizontalAlignment="Left" Margin="0,207,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="txbxPrepTime" HorizontalAlignment="Left" Height="23" Margin="0,233,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="txbxPrepTime" HorizontalAlignment="Left" Height="23" Margin="0,233,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
+                         Text="{Binding PrepTime, Mode=OneTime}"/>
                 <!--NumberOfServes-->
                 <Label Content="Number of Serves" HorizontalAlignment="Left" Margin="0,261,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="txbxNumServes" HorizontalAlignment="Left" Height="23" Margin="0,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="txbxNumServes" HorizontalAlignment="Left" Height="23" Margin="0,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
+                         Text="{Binding NumberOfServes, Mode=OneTime}"/>
                 <!--Cal_kJ_PerServe-->
                 <Label Content="Calories or Kilojules Per Serve" HorizontalAlignment="Left" Margin="0,315,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="txbxCalkJPerServe" HorizontalAlignment="Left" Height="23" Margin="0,341,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="txbxCalkJPerServe" HorizontalAlignment="Left" Height="23" Margin="0,341,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
+                         Text="{Binding Cal_kJ_PerServe, Mode=OneTime}"/>
             </Grid>
         </ScrollViewer>
 
@@ -53,19 +63,23 @@
             <!--Steps-->
             <Label Content="Steps" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top"/>
             <ScrollViewer Grid.Row="0" Margin="5,36,10,5"
-                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
+                          HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" >
                 <!--Each individual step-->
                 <ListView x:Name="ListViewSteps">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Step number: " FontWeight="Bold" />
-                                    <TextBlock Text="{Binding Path=Number}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Path=Number}" FontWeight="Bold" Margin="0,0,0,0" TextAlignment="Center"
+                                           HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                <StackPanel Orientation="Vertical" Grid.Column="1" CanHorizontallyScroll="False">
+                                    <TextBlock Text="Step description: " FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Path=Description}" TextWrapping="WrapWithOverflow" />
                                 </StackPanel>
-                                <TextBlock Text="Step description: " FontWeight="Bold" />
-                                <TextBlock Text="{Binding Path=Description}" />
-                            </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
@@ -75,7 +89,9 @@
                     Grid.Row="1"/>
         </Grid>
 
-        <Button Content="Submit" HorizontalAlignment="Left" Margin="10,5,0,10" Width="75" Height="20" VerticalAlignment="Bottom" Grid.Row="1" />
-        <Button Content="Cancel" Margin="0,5,10,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <Button x:Name="buttonSubmit" Content="Submit" HorizontalAlignment="Left" Margin="10,5,0,10" Width="75" Height="20" VerticalAlignment="Bottom" Grid.Row="1"
+                Click="ButtonSubmit_Click"/>
+        <Button x:Name="buttonCancel" Content="Cancel" Margin="0,5,10,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="2"
+                Click="ButtonCancel_Click"/>
     </Grid>
 </Window>
