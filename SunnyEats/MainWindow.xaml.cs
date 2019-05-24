@@ -18,7 +18,6 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using SunnyEats.EntityDataModel;
 using SunnyEats.EntityDataModel.Tables;
-// using SunnyEats.Models;
 
 namespace SunnyEats
 {
@@ -37,10 +36,8 @@ namespace SunnyEats
             {
                 Recipes.Add(item);
             }
-
             this.ListViewRecipes.ItemsSource = recipes;
-
-            this.recipeWindow = new RecipeWindow();
+            this.ListViewRecipes.SelectedIndex = 1;
         }
 
         private RecipeWindow recipeWindow;
@@ -58,16 +55,14 @@ namespace SunnyEats
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            recipeWindow.Owner = this;
-        }
-
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
+            this.recipeWindow = new RecipeWindow();
+            recipeWindow.Owner = this;
             recipeWindow.ShowDialog();
         }
 
+        // Ensure that the size of each columns for the Recipe view remains above or equal to 54 pixels
         private void RecipeGridViewColumnHeader_SizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
         {
             sizeChangedEventArgs.Handled = true;
@@ -98,21 +93,20 @@ namespace SunnyEats
             // Only proceed with removing the recipe if a recipe is selected
             if (selectedRecipe != null)
             {
+                // Ensure that this is the action the user wants to take
                 messageBoxText = "Are you sure you want to delete " + selectedRecipe.Name + "\r\nThis action cannot be undone.";
                 caption = "Delete " + selectedRecipe.Name;
                 button = MessageBoxButton.YesNo;
                 icon = MessageBoxImage.Warning;
-
                 MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.No);
 
+                // If the user answers yes delete the recipe both from the ObservableCollection and the Database then exit the method
                 if (result == MessageBoxResult.Yes)
                 {
                     this.dBContext.Recipes.Remove(selectedRecipe);
                     this.dBContext.SaveChanges();
 
                     this.Recipes.Remove(selectedRecipe);
-                    
-                    // exit the method
                     return;
                 }
             }

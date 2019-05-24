@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
         Title="SunnyEats" Height="450" Width="800"
-        MinHeight="240" MinWidth="320" Loaded="Window_Loaded" >
+        MinHeight="240" MinWidth="320" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
@@ -15,19 +15,19 @@
         <ListView x:Name="ListViewRecipes" Grid.Row="0" Margin="10">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Width="80" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Width="80" >
                         <GridViewColumnHeader x:Name="gvchRecipe" Content="Recipe" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Category.Name}" Width="100" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Category.Name}" Width="100" >
                         <GridViewColumnHeader x:Name="gvchCategory" Content="Category" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding PrepTime}" Width="70" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=PrepTime}" Width="70" >
                         <GridViewColumnHeader x:Name="gvchPrepTime" Content="Prep Time" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding NumberOfServes}" Width="120" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=NumberOfServes}" Width="120" >
                         <GridViewColumnHeader x:Name="gvchNumServes" Content="Number of Serves" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Cal_kJ_PerServe}" Width="100">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Cal_kJ_PerServe}" Width="100">
                         <GridViewColumnHeader x:Name="gvchPerServe" Content="Cal kJ per serve" SizeChanged="RecipeGridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                 </GridView>
