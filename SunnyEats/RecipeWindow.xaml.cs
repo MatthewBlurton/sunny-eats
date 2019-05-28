@@ -48,19 +48,32 @@ namespace SunnyEats
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // if a recipe is included, populate the steps with the recipe's steps
-            if (this.recipe != null)
-            {
-                foreach (RecipeStep step in this.recipe.RecipeSteps)
-                {
-                    steps.Add(step);
-                }
-            }
-
             // Load all the categories
             foreach (Category category in dbContext.Categories)
             {
                 this.categories.Add(category);
+            }
+
+            // check if a recipe is being updated
+            if (this.recipe != null)
+            {
+                // pull all the recipe steps from the currently selected recipe
+                foreach (RecipeStep step in this.recipe.RecipeSteps)
+                {
+                    steps.Add(step);
+                }
+
+
+                // Poor performance, need to figure out a LINQ query to replace the for loop
+                for (int i = 0; i < cmbxCategory.Items.Count; i++)
+                {
+                    Category currentCat = (Category)cmbxCategory.Items[i];
+                    if (currentCat.ID == this.recipe.CategoryID )
+                    {
+                        cmbxCategory.SelectedIndex = i;
+                        break;
+                    }
+                }
             }
         }
 
@@ -110,12 +123,13 @@ namespace SunnyEats
 
         private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
-            if (AskToCloseSave()) this.Close();
+            //if (AskToCloseSave()) this.Close();
+            this.Close();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = !AskToCloseNoSave();
+            //e.Cancel = !AskToCloseNoSave();
         }
 
         
