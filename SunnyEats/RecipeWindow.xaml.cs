@@ -77,7 +77,40 @@ namespace SunnyEats
             }
         }
 
+        private bool AreThereChanges()
+        {
+            // Initialize variables
+            string name;
+            string desc;
+            int? catId;
+            string prepTime;
+            string serves;
+            string calkPerServe;
+            List<RecipeIngredient> ingredients = new List<RecipeIngredient>();
+            List<RecipeStep> steps = new List<RecipeStep>();
 
+            if (this.recipe != null)
+            {
+                // Add data to variables
+                name = this.recipe.Name;
+                desc = this.recipe.Description;
+                catId = this.recipe.CategoryID;
+                prepTime = this.recipe.PrepTime;
+                serves = this.recipe.NumberOfServes;
+                calkPerServe = this.recipe.Cal_kJ_PerServe;
+
+                Category selCategory = (Category)cmbxCategory.SelectedItem;
+
+                if (txbxName.Text != name)                  return true;
+                if (txbxDescription.Text != desc)           return true;
+                if (selCategory.ID != catId)                return true;
+                if (txbxPrepTime.Text != prepTime)          return true;
+                if (txbxNumServes.Text != serves)           return true;
+                if (txbxCalkJPerServe.Text != calkPerServe) return true;
+            }
+
+            return false;
+        }
 
 
         /// <summary>
