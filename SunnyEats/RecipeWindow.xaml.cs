@@ -89,6 +89,8 @@ namespace SunnyEats
             List<RecipeIngredient> ingredients = new List<RecipeIngredient>();
             List<RecipeStep> steps = new List<RecipeStep>();
 
+            
+
             if (this.recipe != null)
             {
                 // Add data to variables
@@ -108,6 +110,13 @@ namespace SunnyEats
                 if (txbxNumServes.Text != serves)           return true;
                 if (txbxCalkJPerServe.Text != calkPerServe) return true;
             }
+
+            if (txbxName.Text != "")                return true;
+            if (txbxDescription.Text != "")         return true;
+            if (cmbxCategory.SelectedItem != null)  return true;
+            if (txbxPrepTime.Text != "")            return true;
+            if (txbxNumServes.Text != "")           return true;
+            if (txbxCalkJPerServe.Text != "")       return true;
 
             return false;
         }
