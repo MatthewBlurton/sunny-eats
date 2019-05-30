@@ -77,6 +77,16 @@ namespace SunnyEats
             }
         }
 
+        private bool AreInputsValid()
+        {
+            var name = txbxName.Text;
+            var desc = txbxDescription.Text;
+            var prep = txbxPrepTime.Text;
+            var cat = (Category)cmbxCategory.SelectedItem;
+            var numS = txbxNumServes;
+            return true;
+        }
+
         private bool AreThereChanges()
         {
             // Initialize variables
@@ -86,7 +96,6 @@ namespace SunnyEats
             string prepTime;
             string serves;
             string calkPerServe;
-            List<RecipeIngredient> ingredients = new List<RecipeIngredient>();
             List<RecipeStep> steps = new List<RecipeStep>();
 
             
@@ -110,13 +119,15 @@ namespace SunnyEats
                 if (txbxNumServes.Text != serves)           return true;
                 if (txbxCalkJPerServe.Text != calkPerServe) return true;
             }
-
-            if (txbxName.Text != "")                return true;
-            if (txbxDescription.Text != "")         return true;
-            if (cmbxCategory.SelectedItem != null)  return true;
-            if (txbxPrepTime.Text != "")            return true;
-            if (txbxNumServes.Text != "")           return true;
-            if (txbxCalkJPerServe.Text != "")       return true;
+            else
+            {
+                if (txbxName.Text != "") return true;
+                if (txbxDescription.Text != "") return true;
+                if (cmbxCategory.SelectedItem != null) return true;
+                if (txbxPrepTime.Text != "") return true;
+                if (txbxNumServes.Text != "") return true;
+                if (txbxCalkJPerServe.Text != "") return true;
+            }
 
             return false;
         }
@@ -126,16 +137,19 @@ namespace SunnyEats
         /// Ask the user if they would like to close without saving, if there have been changes made
         /// </summary>
         /// <returns>Did the user say yes or no?</returns>
-        private bool AskToCloseNoSave()
+        private bool CloseNoSave()
         {
-            string message = "You have unsaved changes, are you sure you want to stop?";
-            string caption = "Quit without saving";
-            MessageBoxButton button = MessageBoxButton.YesNo;
-            MessageBoxImage icon = MessageBoxImage.Warning;
+            if (AreThereChanges())
+            {
+                string message = "You have unsaved changes, are you sure you want to stop?";
+                string caption = "Quit without saving";
+                MessageBoxButton button = MessageBoxButton.YesNo;
+                MessageBoxImage icon = MessageBoxImage.Warning;
 
-            MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
+                MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
 
-            if (result.Equals(MessageBoxResult.No)) return false;
+                if (result.Equals(MessageBoxResult.No)) return false;
+            }
 
             return true;
         }
@@ -144,36 +158,39 @@ namespace SunnyEats
         /// Ask the user if they would like to overwrite the existing recipe, if the recipe isn't new
         /// </summary>
         /// <returns></returns>
-        private bool AskToCloseSave()
+        private bool OverwriteRecipeMessage()
         {
             if (recipe != null)
             {
-                string message = "Are you sure you wan't to overwrite " + recipe.Name + "?";
-                string caption = "Overwrite existing recipe";
-                MessageBoxButton button = MessageBoxButton.YesNo;
-                MessageBoxImage icon = MessageBoxImage.Warning;
+                if (AreThereChanges())
+                {
+                    string message = "Are you sure you wan't to overwrite " + recipe.Name + "?";
+                    string caption = "Overwrite existing recipe";
+                    MessageBoxButton button = MessageBoxButton.YesNo;
+                    MessageBoxImage icon = MessageBoxImage.Warning;
 
-                MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
+                    MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
 
-                if (result.Equals(MessageBoxResult.Yes)) return false;
+                    if (result.Equals(MessageBoxResult.Yes)) return true;
+                }
             }
-            return true;
+            return false;
         }
 
 
-        private void ButtonCancel_Click(object sender, RoutedEventArgs e) => this.Close();
+        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
 
         private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
-            //if (AskToCloseSave()) this.Close();
-            this.Close();
+            if (OverwriteRecipeMessage()) this.Close();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //e.Cancel = !AskToCloseNoSave();
+            e.Cancel = false;
         }
-
-        
     }
 }

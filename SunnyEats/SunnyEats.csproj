@@ -84,7 +84,6 @@
     <Compile Include="EntityDataModel\Tables\Ingredient.cs" />
     <Compile Include="EntityDataModel\MenuDBContext.cs" />
     <Compile Include="EntityDataModel\Tables\Recipe.cs" />
-    <Compile Include="EntityDataModel\Tables\RecipeIngredient.cs" />
     <Compile Include="EntityDataModel\Tables\RecipeStep.cs" />
     <Compile Include="RecipeWindow.xaml.cs">
       <DependentUpon>RecipeWindow.xaml</DependentUpon>

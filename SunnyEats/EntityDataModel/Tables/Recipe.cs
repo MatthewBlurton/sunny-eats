@@ -12,7 +12,7 @@ namespace SunnyEats.EntityDataModel.Tables
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Recipe()
         {
-            RecipeIngredients = new HashSet<RecipeIngredient>();
+            Ingredients = new HashSet<Ingredient>();
             RecipeSteps = new HashSet<RecipeStep>();
         }
 
@@ -39,7 +39,7 @@ namespace SunnyEats.EntityDataModel.Tables
         public virtual Category Category { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+        public virtual ICollection<Ingredient> Ingredients { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeStep> RecipeSteps { get; set; }

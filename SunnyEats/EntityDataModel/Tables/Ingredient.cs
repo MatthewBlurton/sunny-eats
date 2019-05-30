@@ -9,22 +9,17 @@ namespace SunnyEats.EntityDataModel.Tables
     [Table("Ingredient")]
     public partial class Ingredient
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Ingredient()
-        {
-            RecipeIngredients = new HashSet<RecipeIngredient>();
-        }
-
         public int ID { get; set; }
 
+        public int RecipeID { get; set; }
+
         [Required]
-        [StringLength(50)]
+        [StringLength(75)]
         public string Name { get; set; }
 
-        [StringLength(255)]
-        public string Description { get; set; }
+        [StringLength(25)]
+        public string Quantity { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+        public virtual Recipe Recipe { get; set; }
     }
 }
