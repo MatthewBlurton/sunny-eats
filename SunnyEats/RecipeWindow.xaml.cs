@@ -30,8 +30,10 @@ namespace SunnyEats
 
             categories = new ObservableCollection<Category>();
             steps = new ObservableCollection<RecipeStep>();
+            ingredients = new ObservableCollection<Ingredient>();
 
             cmbxCategory.ItemsSource = categories;
+            listViewIngredients.ItemsSource = ingredients;
             ListViewSteps.ItemsSource = steps;
         }
 
@@ -43,8 +45,9 @@ namespace SunnyEats
 
         private MenuDBContext dbContext;
         public readonly Recipe recipe;
-        ObservableCollection<Category> categories;
-        ObservableCollection<RecipeStep> steps;
+        private ObservableCollection<Category> categories;
+        private ObservableCollection<RecipeStep> steps;
+        private ObservableCollection<Ingredient> ingredients;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -60,9 +63,13 @@ namespace SunnyEats
                 // pull all the recipe steps from the currently selected recipe
                 foreach (RecipeStep step in this.recipe.RecipeSteps)
                 {
-                    steps.Add(step);
+                    this.steps.Add(step);
                 }
 
+                foreach (Ingredient ingredient in this.recipe.Ingredients)
+                {
+                    this.ingredients.Add(ingredient);
+                }
 
                 // Poor performance, need to figure out a LINQ query to replace the for loop
                 for (int i = 0; i < cmbxCategory.Items.Count; i++)
@@ -97,8 +104,6 @@ namespace SunnyEats
             string serves;
             string calkPerServe;
             List<RecipeStep> steps = new List<RecipeStep>();
-
-            
 
             if (this.recipe != null)
             {
