@@ -102,11 +102,16 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="32" />
+                                    <ColumnDefinition Width="32" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Vertical" Grid.Column="0">
+                                    <Button Content="&#8657;" />
+                                    <Button Content="&#8659;" />
+                                </StackPanel>
                                 <TextBlock Text="{Binding Path=Number}" FontWeight="Bold" Margin="0,0,0,0" TextAlignment="Center"
-                                           HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-                                <StackPanel Orientation="Vertical" Grid.Column="1" CanHorizontallyScroll="False">
+                                           HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" />
+                                <StackPanel Orientation="Vertical" Grid.Column="2" CanHorizontallyScroll="True">
                                     <TextBlock Text="Step description: " FontWeight="Bold" />
                                     <TextBlock Text="{Binding Path=Description}" TextWrapping="WrapWithOverflow" />
                                 </StackPanel>
@@ -115,9 +120,19 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </ScrollViewer>
-
-            <Button Content="+" HorizontalAlignment="Stretch" Margin="5,5,10,5" VerticalAlignment="Top"
-                    Grid.Row="1"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Button Content="Add" HorizontalAlignment="Stretch" Margin="5,5,10,5" VerticalAlignment="Top" />
+                <Button Content="Modify" HorizontalAlignment="Stretch" Margin="5,5,10,5" VerticalAlignment="Top"
+                        Grid.Column="1"/>
+                <Button Content="Remove" HorizontalAlignment="Stretch" Margin="5,5,10,5" VerticalAlignment="Top" 
+                        Grid.Column="2" />
+            </Grid>
+            
         </Grid>
 
         <Button x:Name="buttonSubmit" Content="Submit" HorizontalAlignment="Left" Margin="10,5,0,10" Width="75" Height="20" VerticalAlignment="Bottom" Grid.Row="1"

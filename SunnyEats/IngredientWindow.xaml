@@ -5,19 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
-        Title="IngredientWindow" MinWidth="400" MinHeight="150" MaxWidth="400" MaxHeight="150"
+        Title="IngredientWindow" Width="400" Height="150"
         ShowInTaskbar="False"
         ResizeMode="NoResize">
-    <Grid>
+    <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
         <Label Content="Quantity" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Text="{Binding Path=Quantity, Mode=TwoWay}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="10,36,5,0" />
+        <TextBox HorizontalAlignment="Left" Text="{Binding Path=Quantity, Mode=OneTime}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="10,36,5,0" />
         <Label Content="Ingredient" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top" Grid.Column="1" />
-        <TextBox HorizontalAlignment="Left" Text="{Binding Path=Name, Mode=TwoWay}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="241" Margin="5,36,0,0" Grid.Column="1" />
-        <Button Content="Add" Grid.Column="1" Margin="0,0,0,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" />
+        <TextBox HorizontalAlignment="Left" Text="{Binding Path=Name, Mode=OneTime}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="241" Margin="5,36,0,0" Grid.Column="1" />
+        <Button x:Name="btnSubmit" Content="Add" Grid.Column="1" Margin="0,0,0,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" />
         <Button Content="Cancel" Grid.Column="1" Margin="0,0,80,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" />
     </Grid>
 </Window>

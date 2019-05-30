@@ -208,9 +208,22 @@ namespace SunnyEats
 
         private void EditIngredient_Click(object sender, RoutedEventArgs e)
         {
-            IngredientWindow window = new IngredientWindow(this.recipe, (Ingredient)listViewIngredients.SelectedItem);
-            window.Owner = this;
-            window.Show();
+            Ingredient ingredient = (Ingredient) listViewIngredients.SelectedItem;
+            if (ingredient != null)
+            {
+                IngredientWindow window = new IngredientWindow(this.recipe, (Ingredient)listViewIngredients.SelectedItem);
+                window.Owner = this;
+                window.Show();
+            }
+            else
+            {
+                var messageBoxText = "Can't modify an ingredient that doesn't exist";
+                var caption = "No ingredient selected";
+                var button = MessageBoxButton.OK;
+                var icon = MessageBoxImage.Error;
+                MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon);
+            }
+            
         }
 
         private void RemoveIngredient_Click(object sender, RoutedEventArgs e)

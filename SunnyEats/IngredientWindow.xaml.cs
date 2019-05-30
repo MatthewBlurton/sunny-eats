@@ -26,8 +26,6 @@ namespace SunnyEats
 
             this.recipe = recipe;
             this.ingredient = new Ingredient();
-
-            this.DataContext = this.ingredient;
         }
 
         public IngredientWindow(Recipe recipe, Ingredient ingredient) : this(recipe)
@@ -36,6 +34,8 @@ namespace SunnyEats
             this.ingredient = ingredient;
 
             this.DataContext = this.ingredient;
+
+            this.btnSubmit.Content = "Overwrite";
         }
 
         public readonly Recipe recipe;
