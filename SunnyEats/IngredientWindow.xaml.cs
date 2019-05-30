@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SunnyEats.EntityDataModel.Tables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,26 @@ namespace SunnyEats
     /// </summary>
     public partial class IngredientWindow : Window
     {
-        public IngredientWindow()
+        public IngredientWindow(Recipe recipe)
         {
             InitializeComponent();
+
+            this.recipe = recipe;
+            this.ingredient = new Ingredient();
+
+            this.DataContext = this.ingredient;
         }
+
+        public IngredientWindow(Recipe recipe, Ingredient ingredient) : this(recipe)
+        {
+            this.recipe = recipe;
+            this.ingredient = ingredient;
+
+            this.DataContext = this.ingredient;
+        }
+
+        public readonly Recipe recipe;
+
+        private Ingredient ingredient;
     }
 }

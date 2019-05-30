@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
         Title="RecipeWindow" Height="460" Width="800"
-        MinHeight="240" MinWidth="320" Loaded="Window_Loaded"
+        MinHeight="240" MinWidth="320" Loaded="Window_Loaded" ShowInTaskbar="False"
         Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -69,7 +69,16 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <Button Content="+" HorizontalAlignment="Stretch" Margin="5,5,10,0" VerticalAlignment="Top" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Content="Add" HorizontalAlignment="Stretch" Margin="5,5,10,0" VerticalAlignment="Top" Click="AddIngredient_Click" />
+                            <Button Content="Modify" HorizontalAlignment="Stretch" Margin="5,5,10,0" VerticalAlignment="Top" Click="EditIngredient_Click" Grid.Column="1" />
+                            <Button Content="Delete" HorizontalAlignment="Stretch" Margin="5,5,10,0" VerticalAlignment="Top" Click="RemoveIngredient_Click" Grid.Column="2" />
+                        </Grid>
                     </StackPanel>
 
                 </Grid>

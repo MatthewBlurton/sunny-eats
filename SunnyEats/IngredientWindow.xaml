@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
-        Title="IngredientWindow" Height="150" Width="400"
-        ShowInTaskbar="False">
+        Title="IngredientWindow" MinWidth="400" MinHeight="150" MaxWidth="400" MaxHeight="150"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />

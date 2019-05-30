@@ -85,9 +85,16 @@
     <Compile Include="EntityDataModel\MenuDBContext.cs" />
     <Compile Include="EntityDataModel\Tables\Recipe.cs" />
     <Compile Include="EntityDataModel\Tables\RecipeStep.cs" />
+    <Compile Include="IngredientWindow.xaml.cs">
+      <DependentUpon>IngredientWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecipeWindow.xaml.cs">
       <DependentUpon>RecipeWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="IngredientWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

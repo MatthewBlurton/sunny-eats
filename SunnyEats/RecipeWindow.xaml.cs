@@ -33,8 +33,8 @@ namespace SunnyEats
             ingredients = new ObservableCollection<Ingredient>();
 
             cmbxCategory.ItemsSource = categories;
-            listViewIngredients.ItemsSource = ingredients;
             ListViewSteps.ItemsSource = steps;
+            listViewIngredients.ItemsSource = ingredients;
         }
 
         public RecipeWindow(Recipe recipe) : this()
@@ -197,5 +197,30 @@ namespace SunnyEats
         {
             e.Cancel = false;
         }
+
+        #region Ingredient Manipulation
+        private void AddIngredient_Click(object sender, RoutedEventArgs e)
+        {
+            IngredientWindow window = new IngredientWindow(this.recipe);
+            window.Owner = this;
+            window.Show();
+        }
+
+        private void EditIngredient_Click(object sender, RoutedEventArgs e)
+        {
+            IngredientWindow window = new IngredientWindow(this.recipe, (Ingredient)listViewIngredients.SelectedItem);
+            window.Owner = this;
+            window.Show();
+        }
+
+        private void RemoveIngredient_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region RecipeStep Manipulation
+
+        #endregion
     }
 }
