@@ -5,7 +5,7 @@ namespace SunnyEats.EntityDataModel
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
-    using SunnyEats.EntityDataModel.Tables;
+    using EntityDataModel.Tables;
 
     public partial class MenuDBContext : DbContext
     {
@@ -21,10 +21,6 @@ namespace SunnyEats.EntityDataModel
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Recipe>()
-                .HasMany(e => e.Ingredients)
-                .WithRequired(e => e.Recipe)
-                .WillCascadeOnDelete(false);
         }
     }
 }

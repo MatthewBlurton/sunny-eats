@@ -31,6 +31,7 @@ CREATE TABLE [Ingredient]
     [Quantity]		NVARCHAR(25),
 	CONSTRAINT FK_IngredientToRecipe FOREIGN KEY ([RecipeID])
 		REFERENCES [Recipe]([ID])
+		ON DELETE CASCADE
 );
 
 CREATE TABLE [RecipeStep]
@@ -41,7 +42,8 @@ CREATE TABLE [RecipeStep]
     [Description]   NVARCHAR(1000) NOT NULL,
     CONSTRAINT FK_RecipeStepToRecipe FOREIGN KEY ([RecipeID])
         REFERENCES [Recipe]([ID])
-		ON DELETE CASCADE
+		ON DELETE CASCADE,
+	CONSTRAINT UQ_STEP UNIQUE ([RecipeID], [Number])
 );
 
 INSERT INTO [Category] ([Name])

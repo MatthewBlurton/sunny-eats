@@ -106,8 +106,8 @@
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Orientation="Vertical" Grid.Column="0">
-                                    <Button Content="&#8657;" />
-                                    <Button Content="&#8659;" />
+                                    <Button Content="&#8657;" Click="ButtonStepMoveUp_Click" CommandParameter="{Binding}"/>
+                                    <Button Content="&#8659;" Click="ButtonStepMoveDown_Click" CommandParameter="{Binding}"/>
                                 </StackPanel>
                                 <TextBlock Text="{Binding Path=Number}" FontWeight="Bold" Margin="0,0,0,0" TextAlignment="Center"
                                            HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" />

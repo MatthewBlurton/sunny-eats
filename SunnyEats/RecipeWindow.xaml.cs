@@ -235,5 +235,24 @@ namespace SunnyEats
         #region RecipeStep Manipulation
 
         #endregion
+
+        private void ButtonStepMoveUp_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var rStep = button.CommandParameter as RecipeStep;
+
+            var prevStep = steps.Where(QStep => QStep.Number == rStep.Number - 1).FirstOrDefault();
+
+            var tempStep = rStep;
+            rStep = prevStep;
+            prevStep = tempStep;
+
+        }
+
+        private void ButtonStepMoveDown_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var step = button.CommandParameter as RecipeStep;
+        }
     }
 }
