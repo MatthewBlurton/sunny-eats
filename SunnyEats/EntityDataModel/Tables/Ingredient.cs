@@ -2,24 +2,61 @@ namespace SunnyEats.EntityDataModel.Tables
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
     [Table("Ingredient")]
-    public partial class Ingredient
+    public partial class Ingredient :INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public int ID { get; set; }
 
         public int RecipeID { get; set; }
 
+        private string name;
+
+        private string quantity;
+
         [Required]
         [StringLength(75)]
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+                OnPropertyChanged("Name");
+            }
+        }
 
         [StringLength(25)]
-        public string Quantity { get; set; }
+        public string Quantity
+        {
+            get
+            {
+                return quantity;
+            }
+            set
+            {
+                OnPropertyChanged("Quantity");
+            }
+        }
 
         public virtual Recipe Recipe { get; set; }
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
     }
 }

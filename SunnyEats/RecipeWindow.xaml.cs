@@ -281,5 +281,29 @@ namespace SunnyEats
             var button = sender as Button;
             SwapSteps(true, button.CommandParameter as RecipeStep);
         }
+
+        public void UpdateIngredient(Ingredient ingredient)
+        {
+            // Check if the new ingredient has an id, and if so replace the already existing ingredient
+            if (ingredient.ID != -1)
+            {
+                var originalIngredient = ingredients.Where(Ing => Ing.ID == ingredient.ID).FirstOrDefault();
+                var ingredientIndex = ingredients.IndexOf(originalIngredient);
+
+                ingredients[ingredientIndex] = ingredient;
+            }
+            else
+            {
+                // Change the ID of the ingredient one above the last
+                int highestID = (from ing in ingredients select ing.ID).Max();
+                ingredient.ID = highestID + 1;
+
+                // Add a brand new ingredient
+                ingredients.Add(ingredient);
+            }
+
+            // Update ingredients list view
+            listViewIngredients.ItemsSource = ingredients;
+        }
     }
 }

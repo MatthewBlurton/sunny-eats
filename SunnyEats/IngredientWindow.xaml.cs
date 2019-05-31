@@ -26,16 +26,19 @@ namespace SunnyEats
 
             this.recipe = recipe;
             this.ingredient = new Ingredient();
+
+            // By default designate ingredient's ID as negative 1 since that is the new number
+            this.ingredient.ID = -1;
         }
 
         public IngredientWindow(Recipe recipe, Ingredient ingredient) : this(recipe)
         {
-            this.recipe = recipe;
-            this.ingredient = ingredient;
+            this.recipe = recipe; 
+            this.ingredient = ingredient; // if a ingredient is provided, then the ID will be overwritten to the new ingredient ID
 
-            this.DataContext = this.ingredient;
+            DataContext = this.ingredient;
 
-            this.btnSubmit.Content = "Overwrite";
+            btnSubmit.Content = "Overwrite";
         }
 
         public readonly Recipe recipe;
@@ -44,13 +47,18 @@ namespace SunnyEats
 
         private void BtnSubmit_Click(object sender, RoutedEventArgs e)
         {
-            var parent = this.Owner as RecipeViewWindow;
+            ingredient.Name = txbxIngredient.Text;
+            ingredient.Quantity = txbxQuantity.Text;
+
+            var parent = Owner as RecipeWindow;
+            parent.UpdateIngredient(ingredient);
+
             this.Close();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }
