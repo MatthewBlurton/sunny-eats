@@ -1,0 +1,53 @@
+﻿<Window x:Class="SunnyEats.RecipeViewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SunnyEats"
+        mc:Ignorable="d"
+        Title="RecipeViewWindow" Height="450" Width="800"
+        MinHeight="240" MinWidth="320">
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Header -->
+            <RowDefinition Height="auto" />
+            <!-- Content -->
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Label FontFamily="Matura MT Script Capitals" Content="{Binding Path=Name, FallbackValue=Recipe}" Margin="10,10,10,0" VerticalAlignment="Top"
+               HorizontalAlignment="Center" FontSize="36" FontWeight="Bold"/>
+
+        <ScrollViewer x:Name="svrContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10,10,0,0" Grid.Row="1">
+            <WrapPanel Width="{Binding ElementName=svrContent, Path=ViewportWidth}">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Category" FontWeight="Bold" FontSize="16" />
+                        <Label Content="{Binding Path=Category.Name, FallbackValue='None'}"
+                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Preparation Time" FontWeight="Bold" FontSize="16"/>
+                        <Label Content="{Binding Path=PrepTime, FallbackValue='40m'}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Number of Serves" FontWeight="Bold" FontSize="16"/>
+                        <Label Content="{Binding Path=NumberOfServes, FallbackValue=8}" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Calories or Kilojules Per Serve" FontWeight="Bold" FontSize="16"/>
+                        <Label Content="{Binding Path=Cal_kJ_PerServe, FallbackValue=8cal}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" MinWidth="256" MaxHeight="256" >
+                    <Label Content="Description" FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="{Binding Path=Description, FallbackValue='There is no description associated with this recipe'}" Margin="5 0 5 0"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </WrapPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Window>

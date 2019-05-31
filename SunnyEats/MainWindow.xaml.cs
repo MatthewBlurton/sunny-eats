@@ -82,10 +82,12 @@ namespace SunnyEats
             return curWidth > minWidth ? curWidth : minWidth;
         }
 
+        // Delete the currently selected recipe from ListViewRecipes
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             Recipe selectedRecipe = (Recipe)this.ListViewRecipes.SelectedItem ?? null;
 
+            // Prepare message box paramaters for failure incase selectedRecipe is null
             string messageBoxText = "Could not delete recipe. There are currently no recipes selected";
             string caption = "Error deleting recipe";
             MessageBoxButton button = MessageBoxButton.OK;
@@ -113,6 +115,15 @@ namespace SunnyEats
             }
 
             MessageBox.Show(messageBoxText, caption, button, icon);
+        }
+
+        // When an item is clicked twice from the RecipeListView, open a Window specifically for viewing the recipe
+        private void ListViewRecipesItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListViewItem item = (ListViewItem) sender;
+            var window = new RecipeViewWindow((Recipe) item.DataContext);
+            window.Owner = this;
+            window.Show();
         }
     }
 
