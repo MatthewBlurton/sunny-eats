@@ -41,5 +41,16 @@ namespace SunnyEats
         public readonly Recipe recipe;
 
         private Ingredient ingredient;
+
+        private void BtnSubmit_Click(object sender, RoutedEventArgs e)
+        {
+            var parent = this.Owner as RecipeViewWindow;
+            this.Close();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

@@ -14,10 +14,10 @@
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
         <Label Content="Quantity" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Text="{Binding Path=Quantity, Mode=OneTime}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="10,36,5,0" />
+        <TextBox x:Name="txbxQuantity" HorizontalAlignment="Left" Text="{Binding Path=Quantity, Mode=OneTime}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="10,36,5,0" />
         <Label Content="Ingredient" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top" Grid.Column="1" />
-        <TextBox HorizontalAlignment="Left" Text="{Binding Path=Name, Mode=OneTime}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="241" Margin="5,36,0,0" Grid.Column="1" />
-        <Button x:Name="btnSubmit" Content="Add" Grid.Column="1" Margin="0,0,0,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" />
-        <Button Content="Cancel" Grid.Column="1" Margin="0,0,80,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" />
+        <TextBox x:Name="txbxIngredient" HorizontalAlignment="Left" Text="{Binding Path=Name, Mode=OneTime}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="241" Margin="5,36,0,0" Grid.Column="1" />
+        <Button x:Name="btnSubmit" Content="Add" Grid.Column="1" Margin="0,0,0,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="BtnSubmit_Click" />
+        <Button Content="Cancel" Grid.Column="1" Margin="0,0,80,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="Button_Click" />
     </Grid>
 </Window>

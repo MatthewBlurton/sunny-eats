@@ -84,6 +84,7 @@ namespace SunnyEats
             }
         }
 
+        // Returns true if all inputs in the window are correct
         private bool AreInputsValid()
         {
             var name = txbxName.Text;
@@ -236,23 +237,49 @@ namespace SunnyEats
 
         #endregion
 
+        private void SwapSteps(bool isNext, RecipeStep step)
+        {
+            // Shorthand if else, if isNext is true then swap with the next number otherwise swap with the previous number
+            var otherNumber = isNext ? step.Number + 1 : step.Number - 1;
+            var otherStep = steps.Where(QStep => QStep.Number == otherNumber).FirstOrDefault();
+
+            var stepID = steps.IndexOf(step);
+            var otherStepID = steps.IndexOf(otherStep);
+
+            // Throw error if otherStep doesn't exists
+            if (otherStep == null)
+            {
+                MessageBox.Show("Couldn't swap steps", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Update step number
+            int tempNumber = step.Number;
+            steps[stepID].Number = otherStep.Number;
+            steps[otherStepID].Number = tempNumber;
+
+            // Set currently selected step
+            var curStep = steps[stepID];
+
+            // Sort list
+            var newsteps = steps.OrderBy(Step => Step.Number);
+            steps = new ObservableCollection<RecipeStep>(newsteps);
+
+            // Update listview
+            ListViewSteps.ItemsSource = steps;
+            ListViewSteps.SelectedItem = curStep;
+        }
+
         private void ButtonStepMoveUp_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var rStep = button.CommandParameter as RecipeStep;
-
-            var prevStep = steps.Where(QStep => QStep.Number == rStep.Number - 1).FirstOrDefault();
-
-            var tempStep = rStep;
-            rStep = prevStep;
-            prevStep = tempStep;
-
+            SwapSteps(false, button.CommandParameter as RecipeStep);
         }
 
         private void ButtonStepMoveDown_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var step = button.CommandParameter as RecipeStep;
+            SwapSteps(true, button.CommandParameter as RecipeStep);
         }
     }
 }

@@ -111,10 +111,8 @@
                                 </StackPanel>
                                 <TextBlock Text="{Binding Path=Number}" FontWeight="Bold" Margin="0,0,0,0" TextAlignment="Center"
                                            HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" />
-                                <StackPanel Orientation="Vertical" Grid.Column="2" CanHorizontallyScroll="True">
-                                    <TextBlock Text="Step description: " FontWeight="Bold" />
-                                    <TextBlock Text="{Binding Path=Description}" TextWrapping="WrapWithOverflow" />
-                                </StackPanel>
+                                <TextBlock Text="{Binding Path=Description}" TextWrapping="Wrap" Grid.Column="2"
+                                           VerticalAlignment="Center"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
