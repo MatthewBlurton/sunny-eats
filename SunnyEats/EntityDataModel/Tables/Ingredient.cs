@@ -6,6 +6,7 @@ namespace SunnyEats.EntityDataModel.Tables
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Windows;
 
     [Table("Ingredient")]
     public partial class Ingredient :INotifyPropertyChanged
@@ -44,7 +45,20 @@ namespace SunnyEats.EntityDataModel.Tables
             }
             set
             {
+                quantity = value;
                 OnPropertyChanged("Quantity");
+            }
+        }
+
+        public Visibility IsVisible
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(Quantity))
+                {
+                    return Visibility.Collapsed;
+                }
+                return Visibility.Visible;
             }
         }
 

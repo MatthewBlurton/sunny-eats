@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
-        Title="IngredientWindow" Width="400" Height="150"
+        Title="IngredientWindow" Width="400" Height="173"
         ShowInTaskbar="False"
         ResizeMode="NoResize">
     <Grid >
@@ -14,9 +14,17 @@
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
         <Label Content="Quantity" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txbxQuantity" HorizontalAlignment="Left" Text="{Binding Path=Quantity, Mode=OneTime}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="10,36,5,0" />
+        <TextBox x:Name="txbxQuantity" Text="{Binding Path=Quantity, Mode=OneTime}" Margin="10,36,5,0"
+                 HorizontalAlignment="Left" VerticalAlignment="Top"
+                 Width="120" Height="23"
+                 TextWrapping="Wrap"
+                 MaxLength="25" />
         <Label Content="Ingredient" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top" Grid.Column="1" />
-        <TextBox x:Name="txbxIngredient" HorizontalAlignment="Left" Text="{Binding Path=Name, Mode=OneTime}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="241" Margin="5,36,0,0" Grid.Column="1" />
+        <TextBox x:Name="txbxIngredient" Text="{Binding Path=Name, Mode=OneTime}"
+                 HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="5,36,0,0"
+                 Width="241" Height="69"
+                 TextWrapping="Wrap" MaxLength="75"
+                 Grid.Column="1" />
         <Button x:Name="btnSubmit" Content="Add" Grid.Column="1" Margin="0,0,0,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="BtnSubmit_Click" />
         <Button Content="Cancel" Grid.Column="1" Margin="0,0,80,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="Cancel_Click" />
     </Grid>
