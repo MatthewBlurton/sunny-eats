@@ -53,6 +53,9 @@ namespace SunnyEats
         private Ingredient selIngredient;
         private RecipeStep selStep;
 
+        // Used when closing to check what condition the window is closing (is it from a submission, or just cancel/close)
+        bool closeFromSave = false;
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // Load all the categories
@@ -109,6 +112,7 @@ namespace SunnyEats
 
             if (name.Length <= 0)
             {
+                message = "The length of the recipe name must be above 1";
                 message = "The length of the recipe name must be above 1";
                 valid = false;
             }
@@ -179,18 +183,14 @@ namespace SunnyEats
         /// <returns>Did the user say yes or no?</returns>
         private bool CloseNoSave()
         {
-            if (AreThereChanges())
-            {
-                string message = "You have unsaved changes, are you sure you want to stop?";
-                string caption = "Quit without saving";
-                MessageBoxButton button = MessageBoxButton.YesNo;
-                MessageBoxImage icon = MessageBoxImage.Warning;
+            string message = "You have unsaved changes, are you sure you want to close this recipe without saving?";
+            string caption = "Quit without saving";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Warning;
 
-                MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
+            MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
 
-                if (result.Equals(MessageBoxResult.No)) return false;
-            }
-
+            if (result.Equals(MessageBoxResult.No)) return false;
             return true;
         }
 
@@ -223,7 +223,7 @@ namespace SunnyEats
         // Grabs all the inputs from the info and fills out the recipe with that data
         private void SaveRecipe()
         {
-            recipe = new Recipe();
+            recipe = recipe != null ? recipe : new Recipe();
             recipe.Name = txbxName.Text;
             recipe.Description = txbxDescription.Text;
             recipe.NumberOfServes = txbxNumServes.Text;
@@ -239,36 +239,54 @@ namespace SunnyEats
         // On submit ensure that all the necessary fields have data, and that the user want's to overwrite the existing fields
         private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
-            if (AreInputsValid() && AreThereChanges())
+            if (AreThereChanges())
             {
-                // If recipe is not null then overwrite an already existing recipe
-                if (recipe != null)
+                // If all input fields are valid, then proceed with the saving process
+                if (AreInputsValid())
                 {
-                    if (UserWantsToOverwriteMessage())
+                    // If recipe is not null, then overwrite an already existing recipe
+                    if (recipe != null)
                     {
-                        SaveRecipe();
+                        if (UserWantsToOverwriteMessage())
+                        {
+                            SaveRecipe();
 
+                            dbContext.SaveChanges();
+                            closeFromSave = true;
+                            Close();
+                        }
+                    }
+                    // Otherwise save a new recipe
+                    else
+                    {
+                        MainWindow main = Owner as MainWindow;
+                        SaveRecipe();
+                        dbContext.Recipes.Add(recipe);
                         dbContext.SaveChanges();
+                        main.UpdateRecipeListView();
+                        closeFromSave = true;
                         Close();
                     }
                 }
-                // Otherwise save a new recipe
-                else
-                {
-                    MainWindow main = Owner as MainWindow;
-
-                    SaveRecipe();
-                    dbContext.Recipes.Add(recipe);
-                    dbContext.SaveChanges();
-                    main.UpdateRecipeListView();
-                    Close();
-                }
+            }
+            else
+            {
+                Close();
             }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = false;
+            if (!closeFromSave)
+            {
+                if (AreThereChanges())
+                {
+                    if (!CloseNoSave())
+                    {
+                        e.Cancel = true;
+                    }
+                }
+            }
         }
 
         #region Ingredient Manipulation
