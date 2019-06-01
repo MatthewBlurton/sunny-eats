@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
-        Title="RecipeWindow" Height="460" Width="800"
+        Title="RecipeWindow"
+        Width="768" Height="535"
         MinHeight="240" MinWidth="320" Loaded="Window_Loaded" ShowInTaskbar="False"
         Closing="Window_Closing">
     <Grid>

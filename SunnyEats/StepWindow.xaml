@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
-        Title="StepWindow" Width="400" Height="400"
+        Title="StepWindow"
+        Width="320" Height="240"
         ShowInTaskbar="False"
         ResizeMode="NoResize">
     <Grid>
-        <Label Content="Step" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox Margin="10,41,10,35" TextWrapping="Wrap" Text="{Binding Path=Description}" MaxLength="1000"/>
+        <Label Content="Step Information" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox Margin="10,41,10,35" TextWrapping="Wrap" Text="{Binding Path=Description}" MaxLength="1000" VerticalScrollBarVisibility="Auto" />
         <Button Content="Add" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
         <Button Content="Cancel" Margin="0,0,90,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
-
     </Grid>
 </Window>
