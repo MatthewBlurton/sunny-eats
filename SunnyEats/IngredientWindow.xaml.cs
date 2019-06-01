@@ -105,8 +105,6 @@ namespace SunnyEats
             }
         }
 
-        #region Data Handling
-
         private bool IsFormValid()
         {
             var message = "";
@@ -150,20 +148,15 @@ namespace SunnyEats
 
         private bool OverwriteExistingMessage()
         {
-            if (recipe != null)
-            {
-                string message = "Are you sure you wan't to overwrite the current ingredient?";
-                string caption = "Overwrite existing ingredient";
-                MessageBoxButton button = MessageBoxButton.YesNo;
-                MessageBoxImage icon = MessageBoxImage.Warning;
+            string message = "Are you sure you wan't to overwrite the current ingredient?";
+            string caption = "Overwrite existing ingredient";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Warning;
 
-                MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
+            MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
 
-                if (result.Equals(MessageBoxResult.Yes)) return true;
-            }
+            if (result.Equals(MessageBoxResult.Yes)) return true;
             return false;
         }
-        #endregion
-
     }
 }
