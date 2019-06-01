@@ -26,15 +26,12 @@ namespace SunnyEats
 
             this.recipe = recipe;
             this.ingredient = new Ingredient();
-
-            // By default designate ingredient's ID as negative 1 since that is the new number
-            this.ingredient.ID = -1;
         }
 
         public IngredientWindow(Recipe recipe, Ingredient ingredient) : this(recipe)
         {
             this.recipe = recipe; 
-            this.ingredient = ingredient; // if a ingredient is provided, then the ID will be overwritten to the new ingredient ID
+            this.ingredient = ingredient; // if a ingredient is provided, then the provided ingredient will be overwritten
 
             DataContext = this.ingredient;
 

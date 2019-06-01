@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
         Title="IngredientWindow"
-        Width="320" Height="169"
+        Width="320" Height="180"
         ShowInTaskbar="False"
         ResizeMode="NoResize">
     <Grid >

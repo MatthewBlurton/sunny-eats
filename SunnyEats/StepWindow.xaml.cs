@@ -25,10 +25,7 @@ namespace SunnyEats
             InitializeComponent();
 
             this.recipe = recipe;
-            step = new RecipeStep
-            {
-                ID = -1
-            };
+            step = new RecipeStep();
         }
 
         public StepWindow(Recipe recipe, RecipeStep step) : this(recipe)

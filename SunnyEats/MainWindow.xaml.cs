@@ -30,10 +30,10 @@ namespace SunnyEats
             InitializeComponent();
 
             this.dBContext = new MenuDBContext();
-
+            recipes = new ObservableCollection<Recipe>();
             foreach (var item in this.dBContext.Recipes)
             {
-                Recipes.Add(item);
+                recipes.Add(item);
             }
             this.ListViewRecipes.ItemsSource = recipes;
             this.ListViewRecipes.SelectedIndex = 1;
@@ -44,15 +44,6 @@ namespace SunnyEats
         private MenuDBContext dBContext;
 
         private ObservableCollection<Recipe> recipes;
-        public ObservableCollection<Recipe> Recipes
-        {
-            get
-            {
-                if (recipes == null)
-                    recipes = new ObservableCollection<Recipe>();
-                return recipes;
-            }
-        }
 
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
@@ -109,7 +100,7 @@ namespace SunnyEats
                     this.dBContext.Recipes.Remove(selectedRecipe);
                     this.dBContext.SaveChanges();
 
-                    this.Recipes.Remove(selectedRecipe);
+                    this.recipes.Remove(selectedRecipe);
                     return;
                 }
             }
@@ -124,6 +115,16 @@ namespace SunnyEats
             var window = new RecipeViewWindow((Recipe) item.DataContext);
             window.Owner = this;
             window.Show();
+        }
+
+        public void UpdateRecipeListView()
+        {
+            recipes = new ObservableCollection<Recipe>();
+            foreach (var recipe in dBContext.Recipes)
+            {
+                recipes.Add(recipe);
+            }
+            ListViewRecipes.ItemsSource = recipes;
         }
     }
 
