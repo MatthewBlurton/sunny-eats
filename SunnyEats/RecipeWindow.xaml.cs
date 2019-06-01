@@ -113,7 +113,6 @@ namespace SunnyEats
             if (name.Length <= 0)
             {
                 message = "The length of the recipe name must be above 1";
-                message = "The length of the recipe name must be above 1";
                 valid = false;
             }
             if (ingCount <= 0)

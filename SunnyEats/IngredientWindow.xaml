@@ -8,7 +8,8 @@
         Title="IngredientWindow"
         Width="320" Height="180"
         ShowInTaskbar="False"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Closing="Window_Closing">
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
