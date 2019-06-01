@@ -25,16 +25,31 @@ namespace SunnyEats
             InitializeComponent();
 
             this.recipe = recipe;
-            step = new RecipeStep();
+            step = new RecipeStep
+            {
+                ID = -1
+            };
         }
 
         public StepWindow(Recipe recipe, RecipeStep step) : this(recipe)
         {
             this.step = step;
             this.DataContext = step;
+
+            btnAdd.Content = "Overwrite";
         }
 
         private Recipe recipe;
         private RecipeStep step;
+
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            step.Description = txbxDescription.Text;
+
+            var parent = Owner as RecipeWindow;
+            parent.UpdateStep(step);
+
+            this.Close();
+        }
     }
 }

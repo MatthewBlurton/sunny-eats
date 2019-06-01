@@ -87,12 +87,42 @@ namespace SunnyEats
         // Returns true if all inputs in the window are correct
         private bool AreInputsValid()
         {
+            // Variables to validate
             var name = txbxName.Text;
-            var desc = txbxDescription.Text;
             var prep = txbxPrepTime.Text;
-            var cat = (Category)cmbxCategory.SelectedItem;
-            var numS = txbxNumServes;
-            return true;
+            var numS = txbxNumServes.Text;
+            var ingCount = ingredients.Count;
+            var stepCount = steps.Count;
+
+            // Swapped to false when any variable is flagged as invalid
+            bool valid = true;
+
+            // Dialogue settings
+            string message = "";
+            string caption = "error occurred";
+            MessageBoxButton button = MessageBoxButton.OK;
+            MessageBoxImage icon = MessageBoxImage.Error;
+
+            if (name.Length <= 0)
+            {
+                message = "The length of the recipe name must be above 1";
+                valid = false;
+            }
+            if (ingCount <= 0)
+            {
+                if (message != "") message += "\r\n";
+                message += "There must be atleast 1 ingredient";
+                valid = false;
+            }
+            if (stepCount <= 0)
+            {
+                if (message != "") message += "\r\n";
+                message += "There must be atleast 1 step";
+                valid = false;
+            }
+            if (!valid) MessageBox.Show(message, caption, button, icon);
+
+            return valid;
         }
 
         private bool AreThereChanges()
@@ -164,21 +194,18 @@ namespace SunnyEats
         /// Ask the user if they would like to overwrite the existing recipe, if the recipe isn't new
         /// </summary>
         /// <returns></returns>
-        private bool OverwriteRecipeMessage()
+        private bool UserWantsToOverwriteMessage()
         {
             if (recipe != null)
             {
-                if (AreThereChanges())
-                {
-                    string message = "Are you sure you wan't to overwrite " + recipe.Name + "?";
-                    string caption = "Overwrite existing recipe";
-                    MessageBoxButton button = MessageBoxButton.YesNo;
-                    MessageBoxImage icon = MessageBoxImage.Warning;
+                string message = "Are you sure you wan't to overwrite " + recipe.Name + "?";
+                string caption = "Overwrite existing recipe";
+                MessageBoxButton button = MessageBoxButton.YesNo;
+                MessageBoxImage icon = MessageBoxImage.Warning;
 
-                    MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
+                MessageBoxResult result = MessageBox.Show(message, caption, button, icon);
 
-                    if (result.Equals(MessageBoxResult.Yes)) return true;
-                }
+                if (result.Equals(MessageBoxResult.Yes)) return true;
             }
             return false;
         }
@@ -189,9 +216,29 @@ namespace SunnyEats
             this.Close();
         }
 
+        // On submit ensure that all the necessary fields have data, and that the user want's to overwrite the existing fields
         private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
-            if (OverwriteRecipeMessage()) this.Close();
+            if (AreInputsValid() && AreThereChanges())
+            {
+                if (UserWantsToOverwriteMessage())
+                {
+                    // Replace data of the current recipe with the new values
+                    recipe.Name = txbxName.Text;
+                    recipe.Description = txbxDescription.Text;
+                    recipe.NumberOfServes = txbxNumServes.Text;
+                    recipe.PrepTime = txbxPrepTime.Text;
+
+                    var category = cmbxCategory.SelectedItem as Category;
+                    recipe.CategoryID = category.ID;
+                    recipe.Category = category;
+                    recipe.Ingredients = ingredients;
+                    recipe.RecipeSteps = steps;
+
+                    dbContext.SaveChanges();
+                    Close();
+                }
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -229,7 +276,33 @@ namespace SunnyEats
 
         private void RemoveIngredient_Click(object sender, RoutedEventArgs e)
         {
+            var messageBoxText = "Can't modify an ingredient that doesn't exist";
+            var caption = "No ingredient selected";
+            var button = MessageBoxButton.OK;
+            var icon = MessageBoxImage.Error;
+            MessageBox.Show(messageBoxText, caption, button, icon);
+        }
 
+        public void UpdateIngredient(Ingredient ingredient)
+        {
+            // Check if the new ingredient has an id, and if so replace the already existing ingredient
+            if (ingredient.ID == -1)
+            {
+                // Change the ID of the ingredient one above the last
+                // Checks both the database and local id
+                int highestIDDB = (from ing in dbContext.Ingredients select ing.ID).DefaultIfEmpty(-1).Max();
+                int highestIDLocal = (from ing in ingredients select ing.ID).DefaultIfEmpty(-1).Max();
+                int highestID = highestIDDB > highestIDLocal ? highestIDDB : highestIDLocal;
+
+                // Set the ID
+                ingredient.ID = highestID + 1;
+
+                // Add a brand new ingredient
+                ingredients.Add(ingredient);
+            }
+
+            // Update ingredients list view
+            listViewIngredients.ItemsSource = ingredients;
         }
         #endregion
 
@@ -263,6 +336,28 @@ namespace SunnyEats
         private void StepRemoveButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public void UpdateStep(RecipeStep step)
+        {
+            // Check if the new ingredient has an id, and if so replace the already existing ingredient
+            if (step.ID == -1)
+            {
+                // Change the ID and Number of the step one above the last step
+                int highestIDDB = (from stp in dbContext.RecipeSteps select stp.ID).DefaultIfEmpty(-1).Max();
+                int highestIDLocal = (from stp in steps select stp.ID).DefaultIfEmpty(-1).Max();
+                int highestID = highestIDDB > highestIDLocal ? highestIDDB : highestIDLocal;
+
+                int highestNumber = (from stp in steps select stp.Number).DefaultIfEmpty().Max();
+                step.ID = highestID + 1;
+                step.Number = highestNumber + 1;
+
+                // Add a brand new ingredient
+                steps.Add(step);
+            }
+
+            // Update ingredients list view
+            listViewIngredients.ItemsSource = steps;
         }
         #endregion
 
@@ -312,29 +407,5 @@ namespace SunnyEats
             SwapSteps(true, button.CommandParameter as RecipeStep);
         }
         #endregion
-
-        public void UpdateIngredient(Ingredient ingredient)
-        {
-            // Check if the new ingredient has an id, and if so replace the already existing ingredient
-            if (ingredient.ID != -1)
-            {
-                var originalIngredient = ingredients.Where(Ing => Ing.ID == ingredient.ID).FirstOrDefault();
-                var ingredientIndex = ingredients.IndexOf(originalIngredient);
-
-                ingredients[ingredientIndex] = ingredient;
-            }
-            else
-            {
-                // Change the ID of the ingredient one above the last
-                int highestID = (from ing in ingredients select ing.ID).Max();
-                ingredient.ID = highestID + 1;
-
-                // Add a brand new ingredient
-                ingredients.Add(ingredient);
-            }
-
-            // Update ingredients list view
-            listViewIngredients.ItemsSource = ingredients;
-        }
     }
 }

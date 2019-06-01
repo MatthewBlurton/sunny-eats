@@ -11,8 +11,8 @@
         ResizeMode="NoResize">
     <Grid>
         <Label Content="Step Information" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox Margin="10,41,10,35" TextWrapping="Wrap" Text="{Binding Path=Description, Mode=OneTime}" MaxLength="1000" VerticalScrollBarVisibility="Auto" />
-        <Button Content="Add" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="txbxDescription" Margin="10,41,10,35" TextWrapping="Wrap" Text="{Binding Path=Description, Mode=OneTime}" MaxLength="1000" VerticalScrollBarVisibility="Auto" />
+        <Button x:Name="btnAdd" Content="Add" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="BtnAdd_Click"/>
         <Button Content="Cancel" Margin="0,0,90,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>
