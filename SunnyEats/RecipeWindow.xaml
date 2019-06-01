@@ -126,10 +126,10 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <Button Content="Add" HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Top" />
-                <Button Content="Modify" HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Top"
+                <Button Content="Add" HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Top" Click="StepAddButton_Click" />
+                <Button Content="Modify" HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Top" Click="StepModifyButton_Click"
                         Grid.Column="1"/>
-                <Button Content="Remove" HorizontalAlignment="Stretch" Margin="5,5,10,5" VerticalAlignment="Top" 
+                <Button Content="Remove" HorizontalAlignment="Stretch" Margin="5,5,10,5" VerticalAlignment="Top" Click="StepRemoveButton_Click"
                         Grid.Column="2" />
             </Grid>
             

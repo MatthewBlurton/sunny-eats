@@ -222,7 +222,7 @@ namespace SunnyEats
                 var caption = "No ingredient selected";
                 var button = MessageBoxButton.OK;
                 var icon = MessageBoxImage.Error;
-                MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon);
+                MessageBox.Show(messageBoxText, caption, button, icon);
             }
             
         }
@@ -234,9 +234,39 @@ namespace SunnyEats
         #endregion
 
         #region RecipeStep Manipulation
+        private void StepAddButton_Click(object sender, RoutedEventArgs e)
+        {
+            StepWindow window = new StepWindow(this.recipe);
+            window.Owner = this;
+            window.Show();
+        }
 
+        private void StepModifyButton_Click(object sender, RoutedEventArgs e)
+        {
+            RecipeStep step = (RecipeStep)ListViewSteps.SelectedItem;
+            if (step != null)
+            {
+                StepWindow window = new StepWindow(this.recipe, (RecipeStep)ListViewSteps.SelectedItem);
+                window.Owner = this;
+                window.Show();
+            }
+            else
+            {
+                var messageBoxText = "Can't modify an step that doesn't exist";
+                var caption = "No steps selected";
+                var button = MessageBoxButton.OK;
+                var icon = MessageBoxImage.Error;
+                MessageBox.Show(messageBoxText, caption, button, icon);
+            }
+        }
+
+        private void StepRemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
         #endregion
 
+        #region Move recipe steps
         private void SwapSteps(bool isNext, RecipeStep step)
         {
             // Shorthand if else, if isNext is true then swap with the next number otherwise swap with the previous number
@@ -281,6 +311,7 @@ namespace SunnyEats
             var button = sender as Button;
             SwapSteps(true, button.CommandParameter as RecipeStep);
         }
+        #endregion
 
         public void UpdateIngredient(Ingredient ingredient)
         {

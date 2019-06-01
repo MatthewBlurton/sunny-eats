@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SunnyEats.EntityDataModel.Tables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,21 @@ namespace SunnyEats
     /// </summary>
     public partial class StepWindow : Window
     {
-        public StepWindow()
+        public StepWindow(Recipe recipe)
         {
             InitializeComponent();
+
+            this.recipe = recipe;
+            step = new RecipeStep();
         }
+
+        public StepWindow(Recipe recipe, RecipeStep step) : this(recipe)
+        {
+            this.step = step;
+            this.DataContext = step;
+        }
+
+        private Recipe recipe;
+        private RecipeStep step;
     }
 }
