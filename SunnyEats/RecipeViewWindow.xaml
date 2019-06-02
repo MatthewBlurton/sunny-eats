@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:SunnyEats"
         mc:Ignorable="d"
         Title="RecipeViewWindow" Height="450" Width="800"
-        MinHeight="240" MinWidth="320">
+        MinHeight="240" MinWidth="320"
+        Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <!-- Header -->
@@ -28,23 +29,59 @@
 
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Preparation Time" FontWeight="Bold" FontSize="16"/>
-                        <Label Content="{Binding Path=PrepTime, FallbackValue='40m'}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Path=PrepTime, FallbackValue='N/A'}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Number of Serves" FontWeight="Bold" FontSize="16"/>
-                        <Label Content="{Binding Path=NumberOfServes, FallbackValue=8}" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Path=NumberOfServes, FallbackValue='N/A'}" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Calories or Kilojules Per Serve" FontWeight="Bold" FontSize="16"/>
-                        <Label Content="{Binding Path=Cal_kJ_PerServe, FallbackValue=8cal}" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Path=Cal_kJ_PerServe, FallbackValue='N/A'}" VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" MinWidth="256" MaxHeight="256" >
                     <Label Content="Description" FontWeight="Bold" FontSize="16"/>
-                    <TextBlock Text="{Binding Path=Description, FallbackValue='There is no description associated with this recipe'}" Margin="5 0 5 0"
+                    <TextBlock Text="{Binding Path=Description, FallbackValue='None Provided'}" Margin="5 0 5 0"
                                TextWrapping="Wrap"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Ingredients" FontWeight="Bold" FontSize="16" />
+                    <ListView x:Name="ListViewIngredients" MaxWidth="200">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <BulletDecorator>
+                                    <BulletDecorator.Bullet>
+                                        <Ellipse Height="10" Width="10" Fill="Black" />
+                                    </BulletDecorator.Bullet>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Path=Quantity, Mode=OneWay}" Margin="10 0 0 0" />
+                                        <TextBlock Text=" " Visibility="{Binding IsVisible}" />
+                                        <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                                    </StackPanel>
+                                </BulletDecorator>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+                <StackPanel>
+                    <Label Content="Steps" FontWeight="Bold" FontSize="16" />
+                    <ListView x:Name="ListViewSteps" MaxWidth="512">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Width="{Binding Path=ActualWidth, ElementName=ListViewSteps}">
+                                    <BulletDecorator>
+                                        <BulletDecorator.Bullet>
+                                            <Label Content="{Binding Path=Number, Mode=OneWay}" />
+                                        </BulletDecorator.Bullet>
+                                        <TextBlock Text="{Binding Path=Description, Mode=OneWay}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                    </BulletDecorator>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackPanel>
             </WrapPanel>
         </ScrollViewer>

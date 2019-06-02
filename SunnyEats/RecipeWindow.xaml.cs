@@ -227,6 +227,7 @@ namespace SunnyEats
             recipe.Description = txbxDescription.Text;
             recipe.NumberOfServes = txbxNumServes.Text;
             recipe.PrepTime = txbxPrepTime.Text;
+            recipe.Cal_kJ_PerServe = txbxCalkJPerServe.Text;
 
             var category = cmbxCategory.SelectedItem as Category;
             if (category != null) recipe.CategoryID = category.ID;
