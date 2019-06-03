@@ -17,6 +17,8 @@ using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using SunnyEats.EntityDataModel;
 using SunnyEats.EntityDataModel.Tables;
+using SunnyEats.Favourites;
+using SunnyEats.Favourites.FavouriteManager;
 
 namespace SunnyEats
 {
@@ -29,14 +31,14 @@ namespace SunnyEats
         {
             InitializeComponent();
 
-            this.dBContext = new MenuDBContext();
+            dBContext = new MenuDBContext();
             recipes = new ObservableCollection<Recipe>();
-            foreach (var item in this.dBContext.Recipes)
+            foreach (var item in dBContext.Recipes)
             {
                 recipes.Add(item);
             }
-            this.ListViewRecipes.ItemsSource = recipes;
-            this.ListViewRecipes.SelectedIndex = 1;
+            ListViewRecipes.ItemsSource = recipes;
+            ListViewRecipes.SelectedIndex = 1;
         }
 
         private RecipeWindow recipeWindow;
@@ -45,22 +47,22 @@ namespace SunnyEats
 
         private ObservableCollection<Recipe> recipes;
 
-        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            this.recipeWindow = new RecipeWindow();
+            recipeWindow = new RecipeWindow();
             recipeWindow.Owner = this;
             recipeWindow.ShowDialog();
         }
 
-        private void BtnModify_Click(object sender, RoutedEventArgs e)
+        private void ButtonModify_Click(object sender, RoutedEventArgs e)
         {
-            this.recipeWindow = new RecipeWindow((Recipe) ListViewRecipes.SelectedItem);
+            recipeWindow = new RecipeWindow((Recipe) ListViewRecipes.SelectedItem);
             recipeWindow.Owner = this;
             recipeWindow.ShowDialog();
         }
 
         // Ensure that the size of each columns for the Recipe view remains above or equal to 54 pixels
-        private void RecipeGridViewColumnHeader_SizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
+        private void GridViewColumnHeaderRecipe_SizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
         {
             sizeChangedEventArgs.Handled = true;
             var column = (GridViewColumnHeader)sender;
@@ -73,8 +75,8 @@ namespace SunnyEats
             return curWidth > minWidth ? curWidth : minWidth;
         }
 
-        // Delete the currently selected recipe from ListViewRecipes
-        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        // Delete the currently selected recipe from RecipesListView
+        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
             Recipe selectedRecipe = (Recipe)this.ListViewRecipes.SelectedItem ?? null;
 
@@ -97,19 +99,60 @@ namespace SunnyEats
                 // If the user answers yes delete the recipe both from the ObservableCollection and the Database then exit the method
                 if (result == MessageBoxResult.Yes)
                 {
-                    this.dBContext.Recipes.Remove(selectedRecipe);
-                    this.dBContext.SaveChanges();
+                    dBContext.Recipes.Remove(selectedRecipe);
+                    dBContext.SaveChanges();
 
-                    this.recipes.Remove(selectedRecipe);
+                    recipes.Remove(selectedRecipe);
                     return;
                 }
             }
 
             MessageBox.Show(messageBoxText, caption, button, icon);
         }
+        private void ButtonFavourite_Click(object sender, RoutedEventArgs e)
+        {
+            IFavouriteManager manager = new BinaryFileFavouriteManager();
+
+            // Write
+            try
+            {
+                List<int> recipeIDs = new List<int>();
+                foreach (var listItem in ListViewRecipes.SelectedItems)
+                {
+                    Recipe recipe = listItem as Recipe;
+                    recipeIDs.Add(recipe.ID);
+                }
+
+                Favourite favourite = new Favourite(recipeIDs.ToArray());
+                manager.WriteFile("New Favourite", favourite);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            // Read
+            try
+            {
+                Favourite favourite = manager.ReadFile("New Favourite");
+
+                string message = "";
+
+                foreach (var id in favourite.ID)
+                {
+                    message += id + "\r\n";
+                }
+
+                MessageBox.Show(message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
         // When an item is clicked twice from the RecipeListView, open a Window specifically for viewing the recipe
-        private void ListViewRecipesItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void RecipesListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             ListViewItem item = (ListViewItem) sender;
             var window = new RecipeViewWindow((Recipe) item.DataContext);
@@ -117,7 +160,7 @@ namespace SunnyEats
             window.Show();
         }
 
-        public void UpdateRecipeListView()
+        public void RecipesListView_Update()
         {
             recipes = new ObservableCollection<Recipe>();
             foreach (var recipe in dBContext.Recipes)
@@ -127,6 +170,5 @@ namespace SunnyEats
             ListViewRecipes.ItemsSource = recipes;
         }
     }
-
 
 }

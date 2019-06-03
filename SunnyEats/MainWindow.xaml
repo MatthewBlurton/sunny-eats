@@ -12,40 +12,54 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="ListViewRecipes" Grid.Row="0" Margin="10">
+        <ListView x:Name="ListViewRecipes" Grid.Row="0" Margin="10 10 10 5">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Width="80" >
-                        <GridViewColumnHeader x:Name="gvchRecipe" Content="Recipe" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
+                        <GridViewColumnHeader Content="Recipe" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Category.Name}" Width="100" >
-                        <GridViewColumnHeader x:Name="gvchCategory" Content="Category" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
+                        <GridViewColumnHeader Content="Category" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=PrepTime}" Width="70" >
-                        <GridViewColumnHeader x:Name="gvchPrepTime" Content="Prep Time" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
+                        <GridViewColumnHeader Content="Prep Time" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=NumberOfServes}" Width="120" >
-                        <GridViewColumnHeader x:Name="gvchNumServes" Content="Number of Serves" SizeChanged="RecipeGridViewColumnHeader_SizeChanged" />
+                        <GridViewColumnHeader Content="Number of Serves" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Cal_kJ_PerServe}" Width="100">
-                        <GridViewColumnHeader x:Name="gvchPerServe" Content="Cal kJ per serve" SizeChanged="RecipeGridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader x:Name="GridViewColumnHeaderCaloriesOrKilojulesPerServe" Content="Cal kJ per serve" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged"/>
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <EventSetter Event="MouseDoubleClick"
-                                 Handler="ListViewRecipesItem_MouseDoubleClick" />
+                                 Handler="RecipesListViewItem_MouseDoubleClick" />
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
         <Grid Grid.Row="1">
-            <Button x:Name="btnAdd" Content="Add" HorizontalAlignment="Left" Margin="10,0,0,10" Width="75" Height="22" VerticalAlignment="Bottom" Click="BtnAdd_Click" />
-            <Button x:Name="btnModify" Content="Modify" HorizontalAlignment="Left" Margin="90,0,0,10" Width="75" Height="22" VerticalAlignment="Bottom" Click="BtnModify_Click"/>
-            <Button x:Name="btnDelete" Content="Delete" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="22" VerticalAlignment="Bottom" Click="BtnDelete_Click"/>
-            <TextBox Height="23" Margin="210,0,90,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <TextBlock HorizontalAlignment="Left" Margin="170,3,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Top"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
 
+            <Grid Grid.Column="0">
+                <Button x:Name="ButtonAdd" Content="Add" HorizontalAlignment="Left" Margin="10,5,0,10" Width="75" Click="ButtonAdd_Click" />
+            </Grid>
+
+            <WrapPanel Grid.Column="1" Margin="10 0 10 5">
+
+                <Button x:Name="ButtonModify" Content="Modify" HorizontalAlignment="Left" Margin="0 5 10 5" Width="75" VerticalAlignment="Top" Click="ButtonModify_Click"/>
+                <Button x:Name="ButtonFavourite" Content="Favourite" Margin="0 5 10 5"
+                        Width="75"
+                        HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Click="ButtonFavourite_Click" />
+            </WrapPanel>
+            <Button x:Name="ButtonDelete" Grid.Column="2"
+                Content="Delete" Margin="0,5,10,10" HorizontalAlignment="Right" Width="75" Click="ButtonDelete_Click"/>
         </Grid>
     </Grid>
 </Window>

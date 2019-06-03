@@ -85,6 +85,11 @@
     <Compile Include="EntityDataModel\MenuDBContext.cs" />
     <Compile Include="EntityDataModel\Tables\Recipe.cs" />
     <Compile Include="EntityDataModel\Tables\RecipeStep.cs" />
+    <Compile Include="Favourites\Favourite.cs" />
+    <Compile Include="Favourites\FavouriteManager\BinaryFileFavouriteManager.cs" />
+    <Compile Include="Favourites\FavouriteManager\JSONFileFavouriteManager.cs" />
+    <Compile Include="Favourites\FavouriteManager\XMLFileFavouriteManager.cs" />
+    <Compile Include="Favourites\IFavouriteManager.cs" />
     <Compile Include="IngredientWindow.xaml.cs">
       <DependentUpon>IngredientWindow.xaml</DependentUpon>
     </Compile>

@@ -263,7 +263,7 @@ namespace SunnyEats
                         SaveRecipe();
                         dbContext.Recipes.Add(recipe);
                         dbContext.SaveChanges();
-                        main.UpdateRecipeListView();
+                        main.RecipesListView_Update();
                         closeFromSave = true;
                         Close();
                     }

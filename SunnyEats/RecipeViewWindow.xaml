@@ -42,7 +42,7 @@
                         <Label Content="{Binding Path=Cal_kJ_PerServe, FallbackValue='N/A'}" VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" MinWidth="256" MaxHeight="256" >
+                <StackPanel Orientation="Vertical" MinWidth="256" MaxWidth="320" MaxHeight="256" >
                     <Label Content="Description" FontWeight="Bold" FontSize="16"/>
                     <TextBlock Text="{Binding Path=Description, FallbackValue='None Provided'}" Margin="5 0 5 0"
                                TextWrapping="Wrap"/>
@@ -71,7 +71,7 @@
                     <ListView x:Name="ListViewSteps" MaxWidth="512">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Width="{Binding Path=ActualWidth, ElementName=ListViewSteps}">
+                                <Grid Width="490">
                                     <BulletDecorator>
                                         <BulletDecorator.Bullet>
                                             <Label Content="{Binding Path=Number, Mode=OneWay}" />

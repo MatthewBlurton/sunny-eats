@@ -29,6 +29,8 @@ namespace SunnyEats
             this.recipe = recipe;
             ingredients = new ObservableCollection<Ingredient>();
             steps = new ObservableCollection<RecipeStep>();
+
+            DataContext = this.recipe;
         }
 
         private Recipe recipe;
