@@ -66,8 +66,6 @@ namespace SunnyEats
                 if (MessageBox.Show(message, caption, button, icon) == MessageBoxResult.Yes)
                 {
                     categories.Remove(category);
-
-                    dbContext.SaveChanges();
                 }
             }
         }
@@ -79,8 +77,6 @@ namespace SunnyEats
         /// <param name="e"></param>
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow window = new MainWindow();
-            window.ListViewRecipes_Update();
             Close();
         }
 
@@ -91,7 +87,15 @@ namespace SunnyEats
         /// <param name="e"></param>
         private void Window_Closed(object sender, EventArgs e)
         {
+            MainWindow window = new MainWindow();
+            dbContext.SaveChanges();
+            window.ListViewRecipes_Update();
             Owner.Focus();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
     }
 }
