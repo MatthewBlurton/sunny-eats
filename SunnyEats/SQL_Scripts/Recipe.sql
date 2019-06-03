@@ -21,6 +21,7 @@ CREATE TABLE [Recipe]
     [Cal_kJ_PerServe]   NVARCHAR(50) NULL,
     CONSTRAINT FK_RecipeToCategory FOREIGN KEY ([CategoryID])
         REFERENCES [Category]([ID])
+		ON DELETE SET NULL
 );
 
 CREATE TABLE [Ingredient]

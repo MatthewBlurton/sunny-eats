@@ -3,38 +3,40 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SunnyEats"
+        xmlns:properties="clr-namespace:SunnyEats.Properties"
         mc:Ignorable="d"
-        Title="SunnyEats" Height="450" Width="800"
-        MinWidth="320" MinHeight="240" >
+        Title="SunnyEats"
+        Width="800" Height="450"
+        MinWidth="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinWidth}" MinHeight="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinHeight}" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="ListViewRecipes" Grid.Row="0" Margin="10 10 10 5">
+        <TextBox x:Name="TextBoxSearch" Height="23" Margin="57.863,12.96,10,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="TextBoxSearch_TextChanged" />
+        <ListView x:Name="ListViewRecipes" Grid.Row="0" Margin="10,40.96,10,5" d:LayoutOverrides="VerticalAlignment">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Width="80" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Width="80" >
                         <GridViewColumnHeader Content="Recipe" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Category.Name}" Width="100" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Category.Name}" Width="100" >
                         <GridViewColumnHeader Content="Category" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=PrepTime}" Width="70" >
+                    <GridViewColumn DisplayMemberBinding="{Binding PrepTime}" Width="70" >
                         <GridViewColumnHeader Content="Prep Time" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=NumberOfServes}" Width="120" >
+                    <GridViewColumn DisplayMemberBinding="{Binding NumberOfServes}" Width="120" >
                         <GridViewColumnHeader Content="Number of Serves" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Cal_kJ_PerServe}" Width="100">
+                    <GridViewColumn DisplayMemberBinding="{Binding Cal_kJ_PerServe}" Width="100">
                         <GridViewColumnHeader x:Name="GridViewColumnHeaderCaloriesOrKilojulesPerServe" Content="Cal kJ per serve" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged"/>
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
             <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <EventSetter Event="MouseDoubleClick"
+                <Style TargetType="{x:Type ListViewItem}">
+                    <EventSetter Event="Control.MouseDoubleClick"
                                  Handler="RecipesListViewItem_MouseDoubleClick" />
                 </Style>
             </ListView.ItemContainerStyle>
@@ -50,16 +52,18 @@
                 <Button x:Name="ButtonAdd" Content="Add" HorizontalAlignment="Left" Margin="10,5,0,10" Width="75" Click="ButtonAdd_Click" />
             </Grid>
 
-            <WrapPanel Grid.Column="1" Margin="10 0 10 5">
-
+            <WrapPanel Grid.Column="1" Margin="10 0 10 5" HorizontalAlignment="Center">
                 <Button x:Name="ButtonModify" Content="Modify" HorizontalAlignment="Left" Margin="0 5 10 5" Width="75" VerticalAlignment="Top" Click="ButtonModify_Click"/>
                 <Button x:Name="ButtonFavourite" Content="Favourite" Margin="0 5 10 5"
                         Width="75"
                         HorizontalAlignment="Left" VerticalAlignment="Top"
                         Click="ButtonFavourite_Click" />
+                <Button x:Name="ButtonCategory" Content="Category" Margin="0 5 10 10" Width="75" Click="ButtonCategory_Click" />
             </WrapPanel>
-            <Button x:Name="ButtonDelete" Grid.Column="2"
-                Content="Delete" Margin="0,5,10,10" HorizontalAlignment="Right" Width="75" Click="ButtonDelete_Click"/>
+
+            <Button Grid.Column="2"
+                    x:Name="ButtonDelete" Content="Delete" Margin="0,5,10,10" HorizontalAlignment="Right" Width="75" Click="ButtonDelete_Click" />
         </Grid>
+        <Label Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
