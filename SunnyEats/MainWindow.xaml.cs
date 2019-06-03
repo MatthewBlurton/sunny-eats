@@ -113,7 +113,7 @@ namespace SunnyEats
         {
             IFavouriteManager manager = new BinaryFileFavouriteManager();
 
-            // Write
+            // Write favourites to file
             try
             {
                 List<int> recipeIDs = new List<int>();
@@ -128,10 +128,10 @@ namespace SunnyEats
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
             }
 
-            // Read
+            // Read favourites from file
             try
             {
                 Favourite favourite = manager.ReadFile("New Favourite");
@@ -147,7 +147,7 @@ namespace SunnyEats
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
             }
         }
 
