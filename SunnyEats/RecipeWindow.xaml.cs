@@ -17,9 +17,6 @@ using System.Windows.Shapes;
 
 namespace SunnyEats
 {
-    /// <summary>
-    /// Interaction logic for RecipeWindow.xaml
-    /// </summary>
     public partial class RecipeWindow : Window
     {
         public RecipeWindow()
@@ -49,6 +46,10 @@ namespace SunnyEats
         private ObservableCollection<RecipeStep> steps;
         private ObservableCollection<Ingredient> ingredients;
 
+        // Used for verification checking
+        bool stepChanged = false;
+        bool ingredientChanged = false;
+
         // If an item is going to be overriden, these variables will be overriden
         private Ingredient selIngredient;
         private RecipeStep selStep;
@@ -61,7 +62,7 @@ namespace SunnyEats
             // Load all the categories
             foreach (Category category in dbContext.Categories)
             {
-                this.categories.Add(category);
+                categories.Add(category);
             }
 
             // check if a recipe is being updated
@@ -70,12 +71,12 @@ namespace SunnyEats
                 // pull all the recipe steps from the currently selected recipe
                 foreach (RecipeStep step in this.recipe.RecipeSteps)
                 {
-                    this.steps.Add(step);
+                    steps.Add(step);
                 }
 
                 foreach (Ingredient ingredient in this.recipe.Ingredients)
                 {
-                    this.ingredients.Add(ingredient);
+                    ingredients.Add(ingredient);
                 }
 
                 // Poor performance, need to figure out a LINQ query to replace the for loop
@@ -141,35 +142,40 @@ namespace SunnyEats
             string prepTime;
             string serves;
             string calkPerServe;
-            List<RecipeStep> steps = new List<RecipeStep>();
 
-            if (this.recipe != null)
+            if (recipe != null)
             {
-                // Add data to variables
-                name = this.recipe.Name;
-                desc = this.recipe.Description;
-                catId = this.recipe.CategoryID;
-                prepTime = this.recipe.PrepTime;
-                serves = this.recipe.NumberOfServes;
-                calkPerServe = this.recipe.Cal_kJ_PerServe;
+                // Populate variable data with the original recipe data
+                name = recipe.Name;
+                desc = recipe.Description;
+                catId = recipe.CategoryID;
+                prepTime = recipe.PrepTime;
+                serves = recipe.NumberOfServes;
+                calkPerServe = recipe.Cal_kJ_PerServe;
 
-                Category selCategory = (Category)cmbxCategory.SelectedItem;
+                // Specialised variables that can't be directly referred to
+                var selCategory = cmbxCategory.SelectedItem as Category;
 
-                if (txbxName.Text != name)                  return true;
-                if (txbxDescription.Text != desc)           return true;
-                if (selCategory.ID != catId)                return true;
-                if (txbxPrepTime.Text != prepTime)          return true;
-                if (txbxNumServes.Text != serves)           return true;
-                if (txbxCalkJPerServe.Text != calkPerServe) return true;
+                // Check for any changes between the source variables and the inputs in the window, if there are any differences return true.
+                if (txbxName.Text != name)                          return true;
+                if (txbxDescription.Text != desc)                   return true;
+                if (selCategory.ID != catId)                        return true;
+                if (txbxPrepTime.Text != prepTime)                  return true;
+                if (txbxNumServes.Text != serves)                   return true;
+                if (txbxCalkJPerServe.Text != calkPerServe)         return true;
+                if (ingredientChanged)                              return true;
+                if (stepChanged)                                    return true;
             }
             else
             {
-                if (txbxName.Text != "") return true;
-                if (txbxDescription.Text != "") return true;
-                if (cmbxCategory.SelectedItem != null) return true;
-                if (txbxPrepTime.Text != "") return true;
-                if (txbxNumServes.Text != "") return true;
-                if (txbxCalkJPerServe.Text != "") return true;
+                if (txbxName.Text != "")                    return true;
+                if (txbxDescription.Text != "")             return true;
+                if (cmbxCategory.SelectedItem != null)      return true;
+                if (txbxPrepTime.Text != "")                return true;
+                if (txbxNumServes.Text != "")               return true;
+                if (txbxCalkJPerServe.Text != "")           return true;
+                if (listViewIngredients.Items.Count > 0)    return true;
+                if (ListViewSteps.Items.Count > 0)          return true;
             }
 
             return false;
@@ -271,6 +277,8 @@ namespace SunnyEats
             }
             else
             {
+                MainWindow main = Owner as MainWindow;
+                main.ListViewRecipes_Update();
                 Close();
             }
         }
@@ -305,6 +313,8 @@ namespace SunnyEats
             if (ingredient != null)
             {
                 // Set the currently selected ingredient to the ListView's currently selected ingredient. This will be overriden
+                selIngredient = new Ingredient();
+
                 selIngredient = listViewIngredients.SelectedItem as Ingredient;
                 IngredientWindow window = new IngredientWindow(this.recipe, selIngredient);
                 window.Owner = this;

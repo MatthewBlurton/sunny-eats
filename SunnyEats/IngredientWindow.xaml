@@ -23,7 +23,7 @@
                  MaxLength="25" />
         <Label Content="Ingredient" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top" Grid.Column="1" />
         <TextBox x:Name="txbxIngredient" Text="{Binding Path=Name, Mode=OneTime}"  Margin="5,36,10,0"
-                 TextWrapping="Wrap" MaxLength="75"
+                 TextWrapping="Wrap" MaxLength="75" AcceptsReturn="True"
                  Grid.Column="1" Height="69" VerticalAlignment="Top" />
         <Button x:Name="btnSubmit" Content="Add" Grid.Column="1" Margin="0,0,10,10" Click="BtnSubmit_Click" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" />
         <Button Content="Cancel" Grid.Column="1" Margin="0,0,90,10" Height="20" VerticalAlignment="Bottom" Click="Cancel_Click" HorizontalAlignment="Right" Width="75" />

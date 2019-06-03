@@ -27,26 +27,27 @@
                     <!-- Description -->
                     <Label Content="Description" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="txbxDescription" Height="69" Margin="10,80,10,0" TextWrapping="Wrap" VerticalAlignment="Top" MaxLength="255"
-                        VerticalScrollBarVisibility="Auto"
-                        Text="{Binding Description, Mode=OneTime}" />
+                             VerticalScrollBarVisibility="Auto"
+                             Text="{Binding Description, Mode=OneTime}"
+                             AcceptsReturn="True"/>
 
                     <!--Category.Name-->
                     <Label Content="Category" HorizontalAlignment="Left" Margin="10,154,0,0" VerticalAlignment="Top"/>
                     <ComboBox x:Name="cmbxCategory" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top" Width="120"
-                        DisplayMemberPath="{Binding Source=Name}" SelectedValuePath="{Binding Source=ID}" />
+                              DisplayMemberPath="{Binding Source=Name}" SelectedValuePath="{Binding Source=ID}" />
 
                     <!--PrepTime-->
                     <Label Content="Preparation Time" HorizontalAlignment="Left" Margin="10,207,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="txbxPrepTime" HorizontalAlignment="Left" Height="23" Margin="10,233,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
-                        Text="{Binding PrepTime, Mode=OneTime}"/>
+                             Text="{Binding PrepTime, Mode=OneTime}"/>
                     <!--NumberOfServes-->
                     <Label Content="Number of Serves" HorizontalAlignment="Left" Margin="10,261,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="txbxNumServes" HorizontalAlignment="Left" Height="23" Margin="10,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
-                        Text="{Binding NumberOfServes, Mode=OneTime}"/>
+                             Text="{Binding NumberOfServes, Mode=OneTime}"/>
                     <!--Cal_kJ_PerServe-->
                     <Label Content="Calories or Kilojules Per Serve" HorizontalAlignment="Left" Margin="10,315,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="txbxCalkJPerServe" HorizontalAlignment="Left" Height="23" Margin="10,341,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
-                        Text="{Binding Cal_kJ_PerServe, Mode=OneTime}"/>
+                             Text="{Binding Cal_kJ_PerServe, Mode=OneTime}"/>
                 </Grid>
                 <StackPanel Grid.Column="1" MaxWidth="320">
                     <Label Content="Ingredients" Margin="5 5 5 0"/>

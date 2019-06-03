@@ -47,6 +47,7 @@ namespace SunnyEats.EntityDataModel.Tables
             {
                 quantity = value;
                 OnPropertyChanged("Quantity");
+                OnPropertyChanged("IsVisible");
             }
         }
 
@@ -54,7 +55,7 @@ namespace SunnyEats.EntityDataModel.Tables
         {
             get
             {
-                if (String.IsNullOrEmpty(Quantity))
+                if (string.IsNullOrEmpty(Quantity))
                 {
                     return Visibility.Collapsed;
                 }

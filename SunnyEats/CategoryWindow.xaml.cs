@@ -37,6 +37,8 @@ namespace SunnyEats
         private MenuDBContext dbContext;
         private ObservableCollection<Category> categories;
 
+
+
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
 
