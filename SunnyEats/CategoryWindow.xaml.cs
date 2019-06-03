@@ -35,7 +35,11 @@ namespace SunnyEats
         private MenuDBContext dbContext;
         private ObservableCollection<Category> categories;
 
-
+        /// <summary>
+        /// Opens a input dialogue where the user can manually add a category
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             CategoryInput window = new CategoryInput();
@@ -43,6 +47,12 @@ namespace SunnyEats
             window.Show();
         }
 
+        /// <summary>
+        /// Opens a delete dialogue where the user can delete a category.
+        /// It only opens if a category is selected/
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
             if (ListViewCategories.SelectedItem != null)
@@ -62,6 +72,11 @@ namespace SunnyEats
             }
         }
 
+        /// <summary>
+        /// Close the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
             MainWindow window = new MainWindow();
@@ -69,6 +84,11 @@ namespace SunnyEats
             Close();
         }
 
+        /// <summary>
+        /// Set the Owner of this Window as the focus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closed(object sender, EventArgs e)
         {
             Owner.Focus();
