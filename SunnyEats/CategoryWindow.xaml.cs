@@ -27,31 +27,51 @@ namespace SunnyEats
             InitializeComponent();
 
             dbContext = new MenuDBContext();
-            categories = new ObservableCollection<Category>();
-            foreach (var category in dbContext.Categories)
-            {
-                categories.Add(category);
-            }
+            categories = new ObservableCollection<Category>(dbContext.Categories.ToList());
+
+            ListViewCategories.ItemsSource = categories;
         }
 
         private MenuDBContext dbContext;
         private ObservableCollection<Category> categories;
 
 
-
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-
+            CategoryInput window = new CategoryInput();
+            window.Owner = this;
+            window.Show();
         }
 
-        private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
+        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
+            if (ListViewCategories.SelectedItem != null)
+            {
+                var category = ListViewCategories.SelectedItem as Category;
+                var message = "Are you sure you want to delete\r\n" + category.Name + "?";
+                var caption = "Delete Category";
+                var button = MessageBoxButton.YesNo;
+                var icon = MessageBoxImage.Warning;
 
+                if (MessageBox.Show(message, caption, button, icon) == MessageBoxResult.Yes)
+                {
+                    categories.Remove(category);
+
+                    dbContext.SaveChanges();
+                }
+            }
         }
 
-        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
+        private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow window = new MainWindow();
+            window.ListViewRecipes_Update();
+            Close();
+        }
 
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Owner.Focus();
         }
     }
 }

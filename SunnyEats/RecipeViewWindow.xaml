@@ -9,7 +9,8 @@
         mc:Ignorable="d"
         Title="RecipeViewWindow" Height="450" Width="800"
         MinWidth="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinWidth}" MinHeight="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinHeight}"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <!-- Header -->

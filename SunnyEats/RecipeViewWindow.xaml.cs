@@ -51,5 +51,10 @@ namespace SunnyEats
             ListViewIngredients.ItemsSource = ingredients;
             ListViewSteps.ItemsSource = steps;
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Owner.Focus();
+        }
     }
 }

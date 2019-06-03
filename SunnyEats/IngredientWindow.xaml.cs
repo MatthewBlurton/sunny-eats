@@ -158,5 +158,10 @@ namespace SunnyEats
             if (result.Equals(MessageBoxResult.Yes)) return true;
             return false;
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Owner.Focus();
+        }
     }
 }

@@ -10,7 +10,8 @@
         Width="768" Height="535"
         MinWidth="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinWidth}" MinHeight="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinHeight}"
         Loaded="Window_Loaded" ShowInTaskbar="False"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />

@@ -9,7 +9,8 @@
         Width="320" Height="180"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        Closed="Window_Closed">
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />

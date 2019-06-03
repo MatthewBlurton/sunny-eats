@@ -9,7 +9,8 @@
         Width="320" Height="240"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        Closed="Window_Closed">
     <Grid>
         <Label Content="Step Information" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txbxDescription" Margin="10,41,10,35" TextWrapping="Wrap" Text="{Binding Path=Description, Mode=OneTime}" MaxLength="1000" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>

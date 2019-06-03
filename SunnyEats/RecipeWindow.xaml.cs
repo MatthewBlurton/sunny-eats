@@ -511,5 +511,10 @@ namespace SunnyEats
             SwapSteps(true, button.CommandParameter as RecipeStep);
         }
         #endregion
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Owner.Focus();
+        }
     }
 }
