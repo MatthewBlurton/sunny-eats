@@ -7,11 +7,11 @@
         xmlns:properties="clr-namespace:SunnyEats.Properties"
         mc:Ignorable="d"
         Title="RecipeWindow"
-        Width="768" Height="535"
+        Width="857" Height="472"
         MinWidth="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinWidth}" MinHeight="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinHeight}"
-        Loaded="Window_Loaded" ShowInTaskbar="False"
+        ShowInTaskbar="False"
         Closing="Window_Closing"
-        Closed="Window_Closed">
+        Closed="Window_Closed" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
@@ -50,7 +50,7 @@
                     <TextBox x:Name="txbxCalkJPerServe" HorizontalAlignment="Left" Height="23" Margin="10,341,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
                              Text="{Binding Cal_kJ_PerServe, Mode=OneTime}"/>
                 </Grid>
-                <StackPanel Grid.Column="1" MaxWidth="320">
+                <StackPanel MaxWidth="320">
                     <Label Content="Ingredients" Margin="5 5 5 0"/>
                     <ListView x:Name="listViewIngredients" VerticalAlignment="Top" Height="195" Margin="5 0 5 0">
                         <ListView.ItemTemplate>
@@ -74,40 +74,32 @@
                         <Button Content="Remove" HorizontalAlignment="Right" Margin="5,5,10,0" Width="75" VerticalAlignment="Top" Click="RemoveIngredient_Click" Grid.Column="2" />
                     </Grid>
                 </StackPanel>
-                <Grid MaxWidth="320">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-
+                <StackPanel Orientation="Vertical" Width="320">
                     <!--Steps-->
                     <Label Content="Steps" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top"/>
-                    <ScrollViewer Grid.Row="0" Margin="5,36,10,5"
-                        HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" >
-                        <!--Each individual step-->
-                        <ListView x:Name="ListViewSteps">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="32" />
-                                            <ColumnDefinition Width="32" />
-                                            <ColumnDefinition Width="1*" />
-                                        </Grid.ColumnDefinitions>
-                                        <StackPanel Orientation="Vertical" Grid.Column="0">
-                                            <Button Content="⇑" Click="ButtonStepMoveUp_Click" CommandParameter="{Binding}"/>
-                                            <Button Content="⇓" Click="ButtonStepMoveDown_Click" CommandParameter="{Binding}"/>
-                                        </StackPanel>
-                                        <TextBlock Text="{Binding Number}" FontWeight="Bold" Margin="0,0,0,0" TextAlignment="Center"
+                    <!--Each individual step-->
+                    <ListView x:Name="ListViewSteps" Height="195">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="32" />
+                                        <ColumnDefinition Width="32" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Vertical" Grid.Column="0">
+                                        <Button Content="⇑" Click="ButtonStepMoveUp_Click" CommandParameter="{Binding}"/>
+                                        <Button Content="⇓" Click="ButtonStepMoveDown_Click" CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Path=Number, Mode=OneWay}" FontWeight="Bold" Margin="0,0,0,0" TextAlignment="Center"
                                             HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" />
-                                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Grid.Column="2"
+                                    <TextBlock Text="{Binding Path=Description, Mode=OneWay}" TextWrapping="Wrap" Grid.Column="2"
                                             VerticalAlignment="Center"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </ScrollViewer>
-                    <Grid Grid.Row="1">
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
@@ -119,8 +111,7 @@
                         <Button Content="Remove" HorizontalAlignment="Right" Margin="5,5,10,5" Width="75" VerticalAlignment="Top" Click="StepRemoveButton_Click"
                             Grid.Column="2" />
                     </Grid>
-
-                </Grid>
+                </StackPanel>
             </WrapPanel>
         </ScrollViewer>
 

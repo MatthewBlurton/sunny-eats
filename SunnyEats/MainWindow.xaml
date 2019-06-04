@@ -7,8 +7,7 @@
         mc:Ignorable="d"
         Title="SunnyEats"
         Width="800" Height="450"
-        MinWidth="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinWidth}" MinHeight="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinHeight}"
-        Closed="Window_Closed">
+        MinWidth="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinWidth}" MinHeight="{Binding Source={x:Static properties:Settings.Default}, Path=ApplicationMinHeight}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />

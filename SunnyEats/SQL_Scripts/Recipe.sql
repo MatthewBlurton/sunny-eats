@@ -53,7 +53,8 @@ VALUES	('Cake'),
 
 INSERT INTO [Recipe] ([Name], [Description], [PrepTime], [CategoryID], [NumberOfServes], [Cal_kJ_PerServe])
 VALUES	('Lemon drizzle cake', 'https://www.bbcgoodfood.com/recipes/4942/lemon-drizzle-cake', '15 min', 1, '10 Slices', '399 kcal'),
-		('Lemon & poppyseed cupcakes', 'https://www.bbcgoodfood.com/recipes/470636/lemon-and-poppyseed-cupcakes', '22 min', 2, '12', '529 kcal');
+		('Lemon & poppyseed cupcakes', 'https://www.bbcgoodfood.com/recipes/470636/lemon-and-poppyseed-cupcakes', '22 min', 2, '12', '529 kcal'),
+		('Malformed Recipe', null, null, null, null, null);
 
 INSERT INTO [Ingredient] ([RecipeID], [Name], [Quantity])
 VALUES	(1, 'unsalted butter, salted', '225g'),

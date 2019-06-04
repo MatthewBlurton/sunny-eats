@@ -3,6 +3,7 @@ using SunnyEats.EntityDataModel.Tables;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace SunnyEats
 
             dbContext = new MenuDBContext();
 
-            categories = new ObservableCollection<Category>();
+            categories = new ObservableCollection<Category>(dbContext.Categories.ToList());
             steps = new ObservableCollection<RecipeStep>();
             ingredients = new ObservableCollection<Ingredient>();
 
@@ -37,11 +38,34 @@ namespace SunnyEats
         public RecipeWindow(Recipe recipe) : this()
         {
             this.recipe = recipe;
-            this.DataContext = this.recipe;
+            srcRecipe = recipe;
+            DataContext = this.recipe;
+
+            // Populate steps and ingredients
+            if (recipe != null)
+            {
+                steps = new ObservableCollection<RecipeStep>(recipe.RecipeSteps);
+                ingredients = new ObservableCollection<Ingredient>(recipe.Ingredients);
+
+                // Poor performance, need to figure out a LINQ query to replace the for loop
+                for (int i = 0; i < cmbxCategory.Items.Count; i++)
+                {
+                    Category currentCat = (Category)cmbxCategory.Items[i];
+                    if (currentCat.ID == this.recipe.CategoryID)
+                    {
+                        cmbxCategory.SelectedIndex = i;
+                        break;
+                    }
+                }
+
+                UpdateAndCorrectSteps();
+                ListViewIngredients_Update();
+            }
         }
 
         private MenuDBContext dbContext;
         private Recipe recipe;
+        private Recipe srcRecipe;
         private ObservableCollection<Category> categories;
         private ObservableCollection<RecipeStep> steps;
         private ObservableCollection<Ingredient> ingredients;
@@ -56,41 +80,6 @@ namespace SunnyEats
 
         // Used when closing to check what condition the window is closing (is it from a submission, or just cancel/close)
         bool closeFromSave = false;
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Load all the categories
-            foreach (Category category in dbContext.Categories)
-            {
-                categories.Add(category);
-            }
-
-            // check if a recipe is being updated
-            if (this.recipe != null)
-            {
-                // pull all the recipe steps from the currently selected recipe
-                foreach (RecipeStep step in this.recipe.RecipeSteps)
-                {
-                    steps.Add(step);
-                }
-
-                foreach (Ingredient ingredient in this.recipe.Ingredients)
-                {
-                    ingredients.Add(ingredient);
-                }
-
-                // Poor performance, need to figure out a LINQ query to replace the for loop
-                for (int i = 0; i < cmbxCategory.Items.Count; i++)
-                {
-                    Category currentCat = (Category)cmbxCategory.Items[i];
-                    if (currentCat.ID == this.recipe.CategoryID )
-                    {
-                        cmbxCategory.SelectedIndex = i;
-                        break;
-                    }
-                }
-            }
-        }
 
         // Returns true if all inputs in the window are correct
         private bool AreInputsValid()
@@ -143,7 +132,7 @@ namespace SunnyEats
             string serves;
             string calkPerServe;
 
-            if (recipe != null)
+            if (srcRecipe != null)
             {
                 // Populate variable data with the original recipe data
                 name = recipe.Name;
@@ -221,13 +210,19 @@ namespace SunnyEats
             return false;
         }
 
-
+        /// <summary>
+        /// The cancel button upon being clicked closes the current window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        // Grabs all the inputs from the info and fills out the recipe with that data
+        /// <summary>
+        /// Grabs all the inputs from the info and fills out the recipe with that data
+        /// </summary>
         private void SaveRecipe()
         {
             recipe = recipe != null ? recipe : new Recipe();
@@ -244,7 +239,11 @@ namespace SunnyEats
             recipe.RecipeSteps = steps;
         }
 
-        // On submit ensure that all the necessary fields have data, and that the user want's to overwrite the existing fields
+        /// <summary>
+        /// On submit ensure that all the necessary fields have data, and that the user want's to overwrite the existing fields.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
             if (AreThereChanges())
@@ -258,8 +257,14 @@ namespace SunnyEats
                         if (UserWantsToOverwriteMessage())
                         {
                             SaveRecipe();
-
+                            
+                            // apply the changes to recipes in the database
                             dbContext.SaveChanges();
+
+                            // Apply changes to MainWindow
+                            MainWindow main = Owner as MainWindow;
+                            main.ListViewRecipes_Update();
+
                             closeFromSave = true;
                             Close();
                         }
@@ -267,10 +272,10 @@ namespace SunnyEats
                     // Otherwise save a new recipe
                     else
                     {
-                        MainWindow main = Owner as MainWindow;
                         SaveRecipe();
                         dbContext.Recipes.Add(recipe);
                         dbContext.SaveChanges();
+                        MainWindow main = Owner as MainWindow;
                         main.ListViewRecipes_Update();
                         closeFromSave = true;
                         Close();
@@ -285,6 +290,11 @@ namespace SunnyEats
             }
         }
 
+        /// <summary>
+        /// If there are changes in data ensure the user wants to close the window without saving
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!closeFromSave)
@@ -300,6 +310,11 @@ namespace SunnyEats
         }
 
         #region Ingredient Manipulation
+        /// <summary>
+        /// Show a window specifically for adding a new ingredient to the current recipe
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddIngredient_Click(object sender, RoutedEventArgs e)
         {
             // Set the currently selected ingredient to null as we will be adding a new ingredient
@@ -309,6 +324,11 @@ namespace SunnyEats
             window.Show();
         }
 
+        /// <summary>
+        /// Show a window and include an already existing ingredient for editing with the new window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditIngredient_Click(object sender, RoutedEventArgs e)
         {
             Ingredient ingredient = (Ingredient) listViewIngredients.SelectedItem;
@@ -333,6 +353,11 @@ namespace SunnyEats
             
         }
 
+        /// <summary>
+        /// Remove an ingredient from the current recipe
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveIngredient_Click(object sender, RoutedEventArgs e)
         {
             var message = "Can't delete an ingredient if there is none selected";
@@ -361,8 +386,14 @@ namespace SunnyEats
             MessageBox.Show(message, caption, button, icon);
         }
 
+        /// <summary>
+        /// Submit a new ingredient to the current recipe
+        /// </summary>
+        /// <param name="ingredient"></param>
         public void UpdateIngredient(Ingredient ingredient)
         {
+            // set ingredientChanged to true
+            ingredientChanged = true;
             // Check if the new ingredient has an id, and if so replace the already existing ingredient
             if (selIngredient == null)
             {
@@ -374,6 +405,9 @@ namespace SunnyEats
             listViewIngredients.ItemsSource = ingredients;
         }
 
+        /// <summary>
+        /// Update the ingredient ListView
+        /// </summary>
         public void ListViewIngredients_Update()
         {
             listViewIngredients.ItemsSource = null;
@@ -442,6 +476,9 @@ namespace SunnyEats
 
         public void UpdateStep(RecipeStep step)
         {
+            // Set stepChanged to true
+            stepChanged = true;
+
             // Check if a step is selected, and if so replace the already existing step
             if (selStep == null)
             {
