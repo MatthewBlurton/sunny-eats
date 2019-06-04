@@ -253,5 +253,11 @@ namespace SunnyEats
         {
             ListViewRecipes_Update(false);
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            // Ensures that the application properly shuts down
+            Environment.Exit(0);
+        }
     }
 }

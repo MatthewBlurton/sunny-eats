@@ -58,6 +58,7 @@ namespace SunnyEats
 
                     var parent = Owner as RecipeWindow;
                     parent.UpdateIngredient(ingredient);
+                    parent.ListViewIngredients_Update();
                 }
                 else return;
             }
@@ -74,6 +75,7 @@ namespace SunnyEats
 
                             var parent = Owner as RecipeWindow;
                             parent.UpdateIngredient(ingredient);
+                            parent.ListViewIngredients_Update();
                         }
                         else return;
                     }

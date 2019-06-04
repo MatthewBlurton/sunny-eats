@@ -155,11 +155,13 @@ namespace SunnyEats
 
                 // Specialised variables that can't be directly referred to
                 var selCategory = cmbxCategory.SelectedItem as Category;
+                int? selCategoryID = null;
+                if (selCategory != null) selCategoryID = selCategory.ID;
 
                 // Check for any changes between the source variables and the inputs in the window, if there are any differences return true.
                 if (txbxName.Text != name)                          return true;
                 if (txbxDescription.Text != desc)                   return true;
-                if (selCategory.ID != catId)                        return true;
+                if (selCategoryID != catId)                         return true;
                 if (txbxPrepTime.Text != prepTime)                  return true;
                 if (txbxNumServes.Text != serves)                   return true;
                 if (txbxCalkJPerServe.Text != calkPerServe)         return true;
@@ -371,6 +373,12 @@ namespace SunnyEats
             // Update ingredients list view
             listViewIngredients.ItemsSource = ingredients;
         }
+
+        public void ListViewIngredients_Update()
+        {
+            listViewIngredients.ItemsSource = null;
+            listViewIngredients.ItemsSource = ingredients;
+        }
         #endregion
 
         #region RecipeStep Manipulation
@@ -423,7 +431,7 @@ namespace SunnyEats
                 if (MessageBox.Show(message, caption, button, icon) == MessageBoxResult.Yes)
                 {
                     steps.Remove(step);
-                    FixSteps();
+                    UpdateAndCorrectSteps();
                 }
                 return;
             }
@@ -445,10 +453,10 @@ namespace SunnyEats
             }
 
             // Update ingredients list view
-            ListViewSteps.ItemsSource = steps;
+            UpdateAndCorrectSteps();
         }
 
-        private void FixSteps()
+        public void UpdateAndCorrectSteps()
         {
             var orderedSteps = new ObservableCollection<RecipeStep>(steps.OrderBy(Step => Step.Number));
 
@@ -478,7 +486,7 @@ namespace SunnyEats
             // Fix the steps if an error is encountered then exit the method
             if (otherStep == null)
             {
-                FixSteps();
+                UpdateAndCorrectSteps();
                 return;
             }
 

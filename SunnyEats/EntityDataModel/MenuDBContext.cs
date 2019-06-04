@@ -4,8 +4,7 @@ namespace SunnyEats.EntityDataModel
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
-
-    using EntityDataModel.Tables;
+    using SunnyEats.EntityDataModel.Tables;
 
     public partial class MenuDBContext : DbContext
     {

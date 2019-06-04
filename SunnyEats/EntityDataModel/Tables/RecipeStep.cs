@@ -2,71 +2,23 @@ namespace SunnyEats.EntityDataModel.Tables
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
     [Table("RecipeStep")]
-    public partial class RecipeStep : INotifyPropertyChanged
+    public partial class RecipeStep
     {
-        private int recipeID;
-        private int number;
-        private string description;
+        public int ID { get; set; }
 
-        // Declare INotifyPropertyChanged event handler
-        public event PropertyChangedEventHandler PropertyChanged;
+        public int RecipeID { get; set; }
 
-        public int ID { get;set; }
-
-        public int RecipeID
-        {
-            get => recipeID;
-            set
-            {
-                recipeID = value;
-
-                // Call OnPropertyChanged whenver recipeID is updated
-                OnPropertyChanged("RecipeID");
-            }
-        }
-
-        public int Number
-        {
-            get => number;
-            set
-            {
-                number = value;
-
-                // Call OnPropertyChanged whenever number is updated
-                OnPropertyChanged("Number");
-            }
-        }
+        public int Number { get; set; }
 
         [Required]
         [StringLength(1000)]
-        public string Description
-        {
-            get => description;
-            set
-            {
-                description = value;
-
-                // Call OnPropertyChanged whenever number is updated
-                OnPropertyChanged("Description");
-            }
-        }
+        public string Description { get; set; }
 
         public virtual Recipe Recipe { get; set; }
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
     }
 }
