@@ -37,17 +37,18 @@ namespace SunnyEats
 
         public RecipeWindow(Recipe recipe) : this()
         {
-            this.recipe = recipe;
-            srcRecipe = recipe;
+            this.recipe = dbContext.Recipes.First(Rec => Rec.ID == recipe.ID);
             DataContext = this.recipe;
 
             // Populate steps and ingredients
             if (recipe != null)
             {
-                steps = new ObservableCollection<RecipeStep>(recipe.RecipeSteps);
-                ingredients = new ObservableCollection<Ingredient>(recipe.Ingredients);
+
+                steps = new ObservableCollection<RecipeStep>(dbContext.RecipeSteps.Where(Step => Step.RecipeID == recipe.ID));
+                ingredients = new ObservableCollection<Ingredient>(dbContext.Ingredients.Where(Ing => Ing.RecipeID == recipe.ID));
 
                 // Poor performance, need to figure out a LINQ query to replace the for loop
+                // Used to select the correct category
                 for (int i = 0; i < cmbxCategory.Items.Count; i++)
                 {
                     Category currentCat = (Category)cmbxCategory.Items[i];
@@ -63,15 +64,15 @@ namespace SunnyEats
             }
         }
 
+        // Used for updating current recipe
         private MenuDBContext dbContext;
         private Recipe recipe;
-        private Recipe srcRecipe;
         private ObservableCollection<Category> categories;
         private ObservableCollection<RecipeStep> steps;
         private ObservableCollection<Ingredient> ingredients;
 
         // Used for verification checking
-        bool stepChanged = false;
+        bool stepsHaveChanged = false;
         bool ingredientChanged = false;
 
         // If an item is going to be overriden, these variables will be overriden
@@ -81,7 +82,10 @@ namespace SunnyEats
         // Used when closing to check what condition the window is closing (is it from a submission, or just cancel/close)
         bool closeFromSave = false;
 
-        // Returns true if all inputs in the window are correct
+        /// <summary>
+        /// Validates all the form inputs before submitting
+        /// </summary>
+        /// <returns>True if all inputs in the window are correct</returns>
         private bool AreInputsValid()
         {
             // Variables to validate
@@ -122,6 +126,10 @@ namespace SunnyEats
             return valid;
         }
 
+        /// <summary>
+        /// Checks the recipes for changes
+        /// </summary>
+        /// <returns>true if recipes data values does not equal the form input entries</returns>
         private bool AreThereChanges()
         {
             // Initialize variables
@@ -132,7 +140,7 @@ namespace SunnyEats
             string serves;
             string calkPerServe;
 
-            if (srcRecipe != null)
+            if (recipe != null)
             {
                 // Populate variable data with the original recipe data
                 name = recipe.Name;
@@ -155,7 +163,7 @@ namespace SunnyEats
                 if (txbxNumServes.Text != serves)                   return true;
                 if (txbxCalkJPerServe.Text != calkPerServe)         return true;
                 if (ingredientChanged)                              return true;
-                if (stepChanged)                                    return true;
+                if (stepsHaveChanged)                                    return true;
             }
             else
             {
@@ -235,8 +243,8 @@ namespace SunnyEats
             var category = cmbxCategory.SelectedItem as Category;
             if (category != null) recipe.CategoryID = category.ID;
             recipe.Category = category;
-            recipe.Ingredients = ingredients;
-            recipe.RecipeSteps = steps;
+            //recipe.Ingredients = ingredients;
+            //recipe.RecipeSteps = steps;
         }
 
         /// <summary>
@@ -257,8 +265,53 @@ namespace SunnyEats
                         if (UserWantsToOverwriteMessage())
                         {
                             SaveRecipe();
-                            
-                            // apply the changes to recipes in the database
+
+                            #region too messy
+                            // Create lists filtered by modified ingredient and recipe ID's
+
+                            //List<Ingredient> modIngredient = new List<Ingredient>();
+                            //List<RecipeStep> modStep = new List<RecipeStep>();
+                            //foreach (var ingID in ingredientsModified)
+                            //{
+                            //    List<Ingredient> ingIDIngredients = new List<Ingredient>(dbContext.Ingredients.Where(Ing => Ing.ID == ingID));
+                            //    foreach (var modifiedIng in ingIDIngredients)
+                            //    {
+                            //        modIngredient.Add(modifiedIng);
+                            //    }
+                            //}
+                            //foreach (var stepID in stepsModified)
+                            //{
+                            //    List<RecipeStep> stepIDCollection = new List<RecipeStep>(dbContext.RecipeSteps.Where(Stp => Stp.ID == stepID));
+                            //    foreach (var modifiedStp in stepIDCollection)
+                            //    {
+                            //        modStep.Add(modifiedStp);
+                            //    }
+                            //}
+
+
+                            //// Apply the changes to recipe in the database
+                            //dbContext.Entry(recipe).State = EntityState.Modified;
+                            //// Apply changes to all ingredients in the database
+                            //foreach (var ingredient in modIngredient)
+                            //{
+                            //    dbContext.Entry(ingredient).State = EntityState.Modified;
+                            //}
+                            //foreach (var ingredient in ingredientsDeleted)
+                            //{
+                            //    dbContext.Entry(ingredient).State = EntityState.Deleted;
+                            //}
+
+                            //// Apply changes to all steps in the database
+                            //foreach (var step in modStep)
+                            //{
+                            //    dbContext.Entry(step).State = EntityState.Modified;
+                            //}
+                            //foreach (var step in stepsDeleted)
+                            //{
+                            //    dbContext.Entry(step).State = EntityState.Deleted;
+                            //}
+                            #endregion
+
                             dbContext.SaveChanges();
 
                             // Apply changes to MainWindow
@@ -377,7 +430,10 @@ namespace SunnyEats
                 // Double check with the user before deleting the ingredient
                 if (MessageBox.Show(message,caption,button,icon) == MessageBoxResult.Yes)
                 {
+                    // Delete the ingredient
                     ingredients.Remove(ingredient);
+                    dbContext.Ingredients.Remove(ingredient);
+                    ingredientChanged = true;
                     return;
                 }
             }
@@ -400,7 +456,11 @@ namespace SunnyEats
                 // Add a brand new ingredient
                 ingredients.Add(ingredient);
             }
-
+            else
+            {
+                var dbIngredient = dbContext.Ingredients.Where(Ing => Ing.ID == ingredient.ID).First();
+                dbIngredient = ingredient;
+            }
             // Update ingredients list view
             listViewIngredients.ItemsSource = ingredients;
         }
@@ -416,6 +476,11 @@ namespace SunnyEats
         #endregion
 
         #region RecipeStep Manipulation
+        /// <summary>
+        /// Once pressed opens a window where the user can add their own step
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StepAddButton_Click(object sender, RoutedEventArgs e)
         {
             // Ensure that selected step is null so RecipeWindow adds a new step.
@@ -425,6 +490,11 @@ namespace SunnyEats
             window.Show();
         }
 
+        /// <summary>
+        /// Once pressed if a step is selected for editing, opens a window where the user can modify the step
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StepModifyButton_Click(object sender, RoutedEventArgs e)
         {
             RecipeStep step = (RecipeStep)ListViewSteps.SelectedItem;
@@ -445,6 +515,11 @@ namespace SunnyEats
             }
         }
 
+        /// <summary>
+        /// Once pressed removes a step from the recipe
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StepRemoveButton_Click(object sender, RoutedEventArgs e)
         {
             var message = "Can't delete a step if there is none selected";
@@ -465,7 +540,9 @@ namespace SunnyEats
                 if (MessageBox.Show(message, caption, button, icon) == MessageBoxResult.Yes)
                 {
                     steps.Remove(step);
+                    dbContext.RecipeSteps.Remove(step);
                     UpdateAndCorrectSteps();
+                    stepsHaveChanged = true;
                 }
                 return;
             }
@@ -474,10 +551,15 @@ namespace SunnyEats
             MessageBox.Show(message, caption, button, icon);
         }
 
+        /// <summary>
+        /// When returned from the step sindow this method is responsible for either adding a new step
+        /// or adjusting an already existing step
+        /// </summary>
+        /// <param name="step">The new or modified step</param>
         public void UpdateStep(RecipeStep step)
         {
             // Set stepChanged to true
-            stepChanged = true;
+            stepsHaveChanged = true;
 
             // Check if a step is selected, and if so replace the already existing step
             if (selStep == null)
@@ -487,22 +569,52 @@ namespace SunnyEats
 
                 // Add a brand new step
                 steps.Add(step);
+                dbContext.RecipeSteps.Add(step);
             }
-
+            // If an already existing step is selected, update it
+            else
+            {
+                var stepToUpdate = dbContext.RecipeSteps.Where(Stp => Stp.ID == step.ID).First();
+                stepToUpdate = step;
+            }
+            
             // Update ingredients list view
             UpdateAndCorrectSteps();
         }
 
+        /// <summary>
+        /// Go throgh the steps and re-order them into numerical form, one after the other
+        /// </summary>
         public void UpdateAndCorrectSteps()
         {
+            // Order steps by their number (this prevents a step with an number of 8 being reduced down to 2 because the step with the previous ID is one below the current)
             var orderedSteps = new ObservableCollection<RecipeStep>(steps.OrderBy(Step => Step.Number));
 
             for (var i = 0; i < orderedSteps.Count - 1; i++)
             {
-                var nextNum = orderedSteps[i].Number + 1;
-                var step = orderedSteps[i + 1];
+                if (i == 0)
+                {
+                    var curStep = orderedSteps[i];
+                    var curNumber = curStep.Number;
+                    var dbCurStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == curStep.ID).First();
 
-                if (step.Number != nextNum) orderedSteps[i + 1].Number = nextNum;
+                    curStep.Number = i + 1 == curNumber ? curNumber : i + 1;
+                    orderedSteps[i] = curStep;
+                    dbCurStep = curStep;
+
+                }
+                var nextNum = orderedSteps[i].Number + 1;
+                var nextStep = orderedSteps[i + 1];
+
+                // Update step number and apply changes to dbSteps
+                if (nextStep.Number != nextNum)
+                {
+                    var dbNextStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == nextStep.ID).First();
+
+                    orderedSteps[i + 1].Number = nextNum;
+                    dbNextStep = nextStep;
+                }
+                
             }
 
             steps = orderedSteps;
@@ -532,8 +644,10 @@ namespace SunnyEats
             steps[stepID].Number = otherStep.Number;
             steps[otherStepID].Number = tempNumber;
 
-            // Set currently selected step
-            var curStep = steps[stepID];
+            // Add to steps modified
+            var dbStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == step.ID).First();
+            var dbOtherStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == otherStep.ID);
+            stepsHaveChanged = true;
 
             // Sort list
             var newsteps = steps.OrderBy(Step => Step.Number);
@@ -541,7 +655,7 @@ namespace SunnyEats
 
             // Update listview
             ListViewSteps.ItemsSource = steps;
-            ListViewSteps.SelectedItem = curStep;
+            ListViewSteps.SelectedItem = step;
         }
 
         private void ButtonStepMoveUp_Click(object sender, RoutedEventArgs e)
