@@ -549,7 +549,8 @@ namespace SunnyEats
             {
                 // Initialise step table to be updated in dbContext
                 var step = orderedSteps[i];
-                var dbStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == step.ID).First();
+                var count = dbContext.RecipeSteps.Count();
+                var dbStep = steps.Where(Stp => Stp.ID == step.ID).First();
                 if (i == 0)
                 {
                     var curStep = orderedSteps[i];
@@ -603,8 +604,8 @@ namespace SunnyEats
             otherStep = steps[otherStepID];
 
             // Add to steps modified
-            var dbStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == step.ID).First();
-            var dbOtherStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == otherStep.ID).First();
+            var dbStep = steps.Where(Stp => Stp.ID == step.ID).First();
+            var dbOtherStep = steps.Where(Stp => Stp.ID == otherStep.ID).First();
             dbStep = step;
             dbOtherStep = otherStep;
 
