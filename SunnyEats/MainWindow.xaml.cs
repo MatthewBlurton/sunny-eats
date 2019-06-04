@@ -196,18 +196,18 @@ namespace SunnyEats
         {
             if (isNew)
             {
-                recipes = new ObservableCollection<Recipe>();
-                foreach (var recipe in dBContext.Recipes)
-                {
-                    recipes.Add(recipe);
-                }
-                ListViewRecipes.ItemsSource = recipes;
-            }
+                // reload database data
+                dBContext = new MenuDBContext();
 
+                // reset recipes
+                recipes = null;
+                recipes = new ObservableCollection<Recipe>(dBContext.Recipes.ToList());
+            }
 
             // If the search input is null or only contains white space then reset the ListViewRecipes to default
             if (string.IsNullOrWhiteSpace(TextBoxSearch.Text))
             {
+                ListViewRecipes.ItemsSource = null;
                 ListViewRecipes.ItemsSource = recipes;
             }
             // Otherwise remove any beginning white space, and ending white space then filter the list

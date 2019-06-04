@@ -5,6 +5,7 @@ namespace SunnyEats.EntityDataModel.Tables
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Linq;
 
     [Table("Recipe")]
     public partial class Recipe
@@ -14,7 +15,11 @@ namespace SunnyEats.EntityDataModel.Tables
         {
             Ingredients = new HashSet<Ingredient>();
             RecipeSteps = new HashSet<RecipeStep>();
+
+            dbContext = new MenuDBContext();
         }
+
+        private MenuDBContext dbContext;
 
         public int ID { get; set; }
 

@@ -94,7 +94,7 @@ namespace SunnyEats
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            MainWindow window = new MainWindow();
+            MainWindow window = Owner as MainWindow;
             window.ListViewRecipes_Update();
         }
     }

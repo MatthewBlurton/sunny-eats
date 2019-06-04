@@ -18,19 +18,19 @@
         <ListView x:Name="ListViewRecipes" Grid.Row="0" Margin="10,40.96,10,5" d:LayoutOverrides="VerticalAlignment">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Width="80" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name, Mode=OneWay}" Width="80" >
                         <GridViewColumnHeader Content="Recipe" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Category.Name}" Width="100" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Category.Name, Mode=OneWay}" Width="100" >
                         <GridViewColumnHeader Content="Category" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding PrepTime}" Width="70" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=PrepTime, Mode=OneWay}" Width="70" >
                         <GridViewColumnHeader Content="Prep Time" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding NumberOfServes}" Width="120" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=NumberOfServes, Mode=OneWay}" Width="120" >
                         <GridViewColumnHeader Content="Number of Serves" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged" />
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Cal_kJ_PerServe}" Width="100">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Cal_kJ_PerServe, Mode=OneWay}" Width="100">
                         <GridViewColumnHeader x:Name="GridViewColumnHeaderCaloriesOrKilojulesPerServe" Content="Cal kJ per serve" SizeChanged="GridViewColumnHeaderRecipe_SizeChanged"/>
                     </GridViewColumn>
                 </GridView>
