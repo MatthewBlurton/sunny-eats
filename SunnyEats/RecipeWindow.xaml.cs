@@ -266,52 +266,6 @@ namespace SunnyEats
                         {
                             SaveRecipe();
 
-                            #region too messy
-                            // Create lists filtered by modified ingredient and recipe ID's
-
-                            //List<Ingredient> modIngredient = new List<Ingredient>();
-                            //List<RecipeStep> modStep = new List<RecipeStep>();
-                            //foreach (var ingID in ingredientsModified)
-                            //{
-                            //    List<Ingredient> ingIDIngredients = new List<Ingredient>(dbContext.Ingredients.Where(Ing => Ing.ID == ingID));
-                            //    foreach (var modifiedIng in ingIDIngredients)
-                            //    {
-                            //        modIngredient.Add(modifiedIng);
-                            //    }
-                            //}
-                            //foreach (var stepID in stepsModified)
-                            //{
-                            //    List<RecipeStep> stepIDCollection = new List<RecipeStep>(dbContext.RecipeSteps.Where(Stp => Stp.ID == stepID));
-                            //    foreach (var modifiedStp in stepIDCollection)
-                            //    {
-                            //        modStep.Add(modifiedStp);
-                            //    }
-                            //}
-
-
-                            //// Apply the changes to recipe in the database
-                            //dbContext.Entry(recipe).State = EntityState.Modified;
-                            //// Apply changes to all ingredients in the database
-                            //foreach (var ingredient in modIngredient)
-                            //{
-                            //    dbContext.Entry(ingredient).State = EntityState.Modified;
-                            //}
-                            //foreach (var ingredient in ingredientsDeleted)
-                            //{
-                            //    dbContext.Entry(ingredient).State = EntityState.Deleted;
-                            //}
-
-                            //// Apply changes to all steps in the database
-                            //foreach (var step in modStep)
-                            //{
-                            //    dbContext.Entry(step).State = EntityState.Modified;
-                            //}
-                            //foreach (var step in stepsDeleted)
-                            //{
-                            //    dbContext.Entry(step).State = EntityState.Deleted;
-                            //}
-                            #endregion
-
                             dbContext.SaveChanges();
 
                             // Apply changes to MainWindow
@@ -593,15 +547,15 @@ namespace SunnyEats
 
             for (var i = 0; i < orderedSteps.Count - 1; i++)
             {
+                // Initialise step table to be updated in dbContext
+                var step = orderedSteps[i];
+                var dbStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == step.ID).First();
                 if (i == 0)
                 {
                     var curStep = orderedSteps[i];
                     var curNumber = curStep.Number;
-                    var dbCurStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == curStep.ID).First();
 
-                    curStep.Number = i + 1 == curNumber ? curNumber : i + 1;
-                    orderedSteps[i] = curStep;
-                    dbCurStep = curStep;
+                    orderedSteps[i].Number = i + 1 == curNumber ? curNumber : i + 1;
 
                 }
                 var nextNum = orderedSteps[i].Number + 1;
@@ -610,12 +564,11 @@ namespace SunnyEats
                 // Update step number and apply changes to dbSteps
                 if (nextStep.Number != nextNum)
                 {
-                    var dbNextStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == nextStep.ID).First();
-
                     orderedSteps[i + 1].Number = nextNum;
-                    dbNextStep = nextStep;
                 }
-                
+
+                // Update step table as we go through the collection
+                dbStep = orderedSteps[i];
             }
 
             steps = orderedSteps;
@@ -645,9 +598,16 @@ namespace SunnyEats
             steps[stepID].Number = otherStep.Number;
             steps[otherStepID].Number = tempNumber;
 
+            // Update step and otherStep
+            step = steps[stepID];
+            otherStep = steps[otherStepID];
+
             // Add to steps modified
             var dbStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == step.ID).First();
-            var dbOtherStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == otherStep.ID);
+            var dbOtherStep = dbContext.RecipeSteps.Where(Stp => Stp.ID == otherStep.ID).First();
+            dbStep = step;
+            dbOtherStep = otherStep;
+
             stepsHaveChanged = true;
 
             // Sort list
