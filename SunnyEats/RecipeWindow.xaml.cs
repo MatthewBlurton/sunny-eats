@@ -454,6 +454,7 @@ namespace SunnyEats
             if (selIngredient == null)
             {
                 // Add a brand new ingredient
+                dbContext.Ingredients.Add(ingredient);
                 ingredients.Add(ingredient);
             }
             else

@@ -26,6 +26,7 @@ namespace SunnyEats
 
             this.recipe = recipe;
             step = new RecipeStep();
+            step.RecipeID = recipe.ID;
         }
 
         public StepWindow(Recipe recipe, RecipeStep step) : this(recipe)

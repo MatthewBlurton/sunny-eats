@@ -26,6 +26,7 @@ namespace SunnyEats
 
             this.recipe = recipe;
             this.ingredient = new Ingredient();
+            ingredient.RecipeID = recipe.ID;
         }
 
         public IngredientWindow(Recipe recipe, Ingredient ingredient) : this(recipe)
