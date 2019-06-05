@@ -23,6 +23,22 @@ namespace SunnyEats.EntityDataModel.Tables
 
         public int ID { get; set; }
 
+        private bool _isFavourite;
+
+        // Used by the program, not the database. Determines whether the current variable is a favourite or not
+        [NotMapped]
+        public string IsFavourite
+        {
+            get
+            {
+                return _isFavourite ? "\u2605" : "";
+            }
+            set
+            {
+                _isFavourite = value.ToUpper().Equals("TRUE") ? true : false;
+            }
+        }
+
         [Required]
         [StringLength(50)]
         public string Name { get; set; }

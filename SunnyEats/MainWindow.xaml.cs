@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WPFCustomMessageBox;
 
 namespace SunnyEats
 {
@@ -23,14 +24,17 @@ namespace SunnyEats
 
             dBContext = new MenuDBContext();
 
+            // Set the sort
+            sortDesc = false;
+            sortSelection = SORT_NAME;
+
             // Populate recipes list view
-            recipes = new ObservableCollection<Recipe>();
-            foreach (var item in dBContext.Recipes)
-            {
-                recipes.Add(item);
-            }
-            ListViewRecipes.ItemsSource = recipes;
+            ListViewRecipes_Update();
             ListViewRecipes.SelectedIndex = 0;
+            
+
+            // Set selectedFavourite to binary
+            favouriteSelection = FAVOURITE_BINARY;
         }
 
         private RecipeWindow recipeWindow;
@@ -38,6 +42,24 @@ namespace SunnyEats
         private MenuDBContext dBContext;
 
         private ObservableCollection<Recipe> recipes;
+
+        // Favourite variables
+        private const string FAVOURITE_PATH = "FavouriteRecipes";
+        private const int FAVOURITE_BINARY = 0;
+        private const int FAVOURITE_JSON = 1;
+        private const int FAVOURITE_XML = 2;
+        private int favouriteSelection;
+
+        // Sorting Variables
+        private const int SORT_FAVOURITE = 0;
+        private const int SORT_NAME = 1;
+        private const int SORT_CATEGORY = 2;
+        private const int SORT_PREP_TIME = 3;
+        private const int SORT_SERVES = 4;
+        private const int SORT_CAL_KJ_SERVE = 5;
+
+        private bool sortDesc;
+        private int sortSelection;
 
         /// <summary>
         /// Open a new window for creating a Recipe
@@ -116,8 +138,8 @@ namespace SunnyEats
                 {
                     dBContext.Recipes.Remove(selectedRecipe);
                     dBContext.SaveChanges();
-
                     recipes.Remove(selectedRecipe);
+                    ListViewRecipes_Update(false);
                     return;
                 }
             }
@@ -126,51 +148,31 @@ namespace SunnyEats
         }
 
         /// <summary>
-        /// Prompt the user and ask what file type they would like to write to.
-        /// Output a new file based on their response (Binary, XML, or JSON).
-        /// Then update the ListView, as it will now have favourites
+        /// Toggle the isFavourite variable of all selected variables
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ButtonFavourite_Click(object sender, RoutedEventArgs e)
         {
-            IFavouriteManager manager = new BinaryFileFavouriteManager();
-
-            // Write favourites to file
-            try
+            if (ListViewRecipes.Items.Count > 0)
             {
-                List<int> recipeIDs = new List<int>();
-                foreach (var listItem in ListViewRecipes.SelectedItems)
+                List<Recipe> selectedRecipes = new List<Recipe>(ListViewRecipes.SelectedItems.OfType<Recipe>().ToList<Recipe>());
+                if (selectedRecipes.Where<Recipe>(Rec => Rec.IsFavourite != "\u2605").Count() > 0)
                 {
-                    Recipe recipe = listItem as Recipe;
-                    recipeIDs.Add(recipe.ID);
+                    foreach (var recipe in selectedRecipes)
+                    {
+                        recipe.IsFavourite = "true";
+                    }
+                }
+                else
+                {
+                    foreach (var recipe in selectedRecipes)
+                    {
+                        recipe.IsFavourite = "false";
+                    }
                 }
 
-                Favourite favourite = new Favourite(recipeIDs.ToArray());
-                manager.WriteFile("New Favourite", favourite);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-
-            // Read favourites from file
-            try
-            {
-                Favourite favourite = manager.ReadFile("New Favourite");
-
-                string message = "";
-
-                foreach (var id in favourite.ID)
-                {
-                    message += id + "\r\n";
-                }
-
-                MessageBox.Show(message);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
+                ListViewRecipes_Update(false);
             }
         }
 
@@ -187,6 +189,46 @@ namespace SunnyEats
             window.Show();
         }
 
+        private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader column = sender as GridViewColumnHeader;
+            string command = column.Content.ToString();
+
+            switch(command)
+            {
+                case "\u2605":
+                    sortDesc = sortSelection == SORT_FAVOURITE ? !sortDesc : false;
+                    sortSelection = SORT_FAVOURITE;
+                    break;
+                case "Name":
+                    sortDesc = sortSelection == SORT_NAME ? !sortDesc : false;
+                    sortSelection = SORT_NAME;
+                    break;
+                case "Category":
+                    sortDesc = sortSelection == SORT_CATEGORY ? !sortDesc : false;
+                    sortSelection = SORT_CATEGORY;
+                    break;
+                case "Prep Time":
+                    sortDesc = sortSelection == SORT_PREP_TIME ? !sortDesc : false;
+                    sortSelection = SORT_PREP_TIME;
+                    break;
+                case "Number of Serves":
+                    sortDesc = sortSelection == SORT_SERVES ? !sortDesc : false;
+                    sortSelection = SORT_SERVES;
+                    break;
+                case "Cal kJ per serve":
+                    sortDesc = sortSelection == SORT_CAL_KJ_SERVE ? !sortDesc : false;
+                    sortSelection = SORT_CAL_KJ_SERVE;
+                    break;
+                default:
+                    sortDesc = false;
+                    sortSelection = SORT_NAME;
+                    break;
+            }
+
+            ListViewRecipes_Update(false);
+        }
+
         /// <summary>
         /// Used to update the ListView for Recipes.
         /// The ListView is filtered based on the searchText
@@ -199,10 +241,12 @@ namespace SunnyEats
                 // reload database data
                 dBContext = new MenuDBContext();
 
-                // reset recipes
+                // Reset recipes
                 recipes = null;
                 recipes = new ObservableCollection<Recipe>(dBContext.Recipes.ToList());
             }
+
+            ObservableCollection<Recipe> filteredRecipes = recipes;
 
             // If the search input is null or only contains white space then reset the ListViewRecipes to default
             if (string.IsNullOrWhiteSpace(TextBoxSearch.Text))
@@ -219,16 +263,72 @@ namespace SunnyEats
                 searchText = searchText.Trim();
                 searchText = searchText.ToUpper();
 
-                // Create a new list using searchText as the filter then apply the new list to ListViewRecipes.ItemsSource
-                ObservableCollection<Recipe> filteredRecipes = new ObservableCollection<Recipe>(
-                    recipes.Where(recipe =>
-                        (!string.IsNullOrWhiteSpace(recipe.Name) && recipe.Name.ToUpper().Contains(searchText))
-                     || (!string.IsNullOrWhiteSpace(recipe.NumberOfServes) && recipe.NumberOfServes.ToUpper().Contains(searchText))
-                     || (!string.IsNullOrWhiteSpace(recipe.PrepTime) && recipe.PrepTime.ToUpper().Contains(searchText))
-                     || (!string.IsNullOrWhiteSpace(recipe.Cal_kJ_PerServe) && recipe.Cal_kJ_PerServe.ToUpper().Contains(searchText))
-                     || (recipe.Category != null && recipe.Category.Name.ToUpper().Contains(searchText))));
-                ListViewRecipes.ItemsSource = filteredRecipes;
+                // Create a new list using searchText as the filter
+                filteredRecipes = new ObservableCollection<Recipe>(
+                    recipes.Where(Rec =>
+                        (!string.IsNullOrWhiteSpace(Rec.Name) && Rec.Name.ToUpper().Contains(searchText))
+                     || (!string.IsNullOrWhiteSpace(Rec.NumberOfServes) && Rec.NumberOfServes.ToUpper().Contains(searchText))
+                     || (!string.IsNullOrWhiteSpace(Rec.PrepTime) && Rec.PrepTime.ToUpper().Contains(searchText))
+                     || (!string.IsNullOrWhiteSpace(Rec.Cal_kJ_PerServe) && Rec.Cal_kJ_PerServe.ToUpper().Contains(searchText))
+                     || (Rec.Category != null && Rec.Category.Name.ToUpper().Contains(searchText))));
             }
+
+            // Sort the final listview
+            switch(sortSelection)
+            {
+                case SORT_FAVOURITE:
+                    filteredRecipes = sortDesc
+                        ? new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderByDescending(Rec => Rec.IsFavourite))
+                        : new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderBy(Rec => Rec.IsFavourite));
+                    break;
+                case SORT_NAME:
+                    filteredRecipes = sortDesc
+                        ? new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderByDescending(Rec => Rec.Name))
+                        : new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderBy(Rec => Rec.Name));
+                    break;
+                case SORT_CATEGORY:
+                    filteredRecipes = sortDesc
+                        ? new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderByDescending(Rec => Rec.Category != null
+                                ? Rec.Category.Name : "").DefaultIfEmpty())
+                        : new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderBy(Rec => Rec.Category != null
+                                ? Rec.Category.Name : "").DefaultIfEmpty());
+                    break;
+                case SORT_PREP_TIME:
+                    filteredRecipes = sortDesc
+                        ? new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderByDescending(Rec => Rec.PrepTime))
+                        : new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderBy(Rec => Rec.PrepTime));
+                    break;
+                case SORT_SERVES:
+                    filteredRecipes = sortDesc
+                        ? new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderByDescending(Rec => Rec.NumberOfServes))
+                        : new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderBy(Rec => Rec.NumberOfServes));
+                    break;
+                case SORT_CAL_KJ_SERVE:
+                    filteredRecipes = sortDesc
+                        ? new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderByDescending(Rec => Rec.Cal_kJ_PerServe))
+                        : new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderBy(Rec => Rec.Cal_kJ_PerServe));
+                    break;
+                default:
+                    filteredRecipes = sortDesc
+                        ? new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderByDescending(Rec => Rec.Name))
+                        : new ObservableCollection<Recipe>(
+                            filteredRecipes.OrderBy(Rec => Rec.Name));
+                    break;
+            }
+            ListViewRecipes.ItemsSource = filteredRecipes;
         }
 
         /// <summary>
@@ -252,6 +352,105 @@ namespace SunnyEats
         private void TextBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             ListViewRecipes_Update(false);
+        }
+
+        /// <summary>
+        /// Prompt the user and ask what file type they would like to write to.
+        /// Output a new file based on their response (Binary, XML, or JSON).
+        /// Then update the ListView, as it will now have favourites
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuItemFavouriteConfig_Click(object sender, RoutedEventArgs e)
+        {
+            var result = CustomMessageBox.ShowYesNoCancel(
+                "Which type of file do you want to manage your favourites file as?",
+                "Favourite file type",
+                "Binary",
+                "JSON",
+                "XML");
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    favouriteSelection = FAVOURITE_BINARY;
+                    break;
+                case MessageBoxResult.No:
+                    favouriteSelection = FAVOURITE_JSON;
+                    break;
+                case MessageBoxResult.Cancel:
+                    favouriteSelection = FAVOURITE_XML;
+                    break;
+                default:
+                    favouriteSelection = FAVOURITE_BINARY;
+                    break;
+            }
+        }
+
+        private void MenuItemFavouriteImport_Click(object sender, RoutedEventArgs e)
+        {
+            var manager = GetFavouriteManager();
+
+            // Read favourites from file
+            try
+            {
+                Favourite favourite = manager.ReadFile(FAVOURITE_PATH);
+
+                foreach (var favID in favourite.IDS)
+                {
+                    foreach (var recipe in recipes.Where(Rec => Rec.ID == favID))
+                    {
+                        recipe.IsFavourite = "true";
+                    }
+                }
+
+                ListViewRecipes_Update(false);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void MenuItemFavouriteExport_Click(object sender, RoutedEventArgs e)
+        {
+            var manager = GetFavouriteManager();
+
+            // Write favourites to file
+            try
+            {
+                List<int> recipeIDs = new List<int>();
+                foreach (var listItem in recipes.Where(Rec => Rec.IsFavourite == "\u2605"))
+                {
+                    Recipe recipe = listItem as Recipe;
+                    recipeIDs.Add(recipe.ID);
+                }
+
+                Favourite favourite = new Favourite(recipeIDs.ToArray());
+                manager.WriteFile(FAVOURITE_PATH, favourite);
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private IFavouriteManager GetFavouriteManager()
+        {
+            IFavouriteManager manager = null;
+            switch (favouriteSelection)
+            {
+                case FAVOURITE_BINARY:
+                    manager = new BinaryFileFavouriteManager();
+                    break;
+                case FAVOURITE_JSON:
+                    manager = new JSONFileFavouriteManager();
+                    break;
+                case FAVOURITE_XML:
+                    manager = new XMLFileFavouriteManager();
+                    break;
+                default:
+                    manager = new BinaryFileFavouriteManager();
+                    break;
+            }
+            return manager;
         }
     }
 }

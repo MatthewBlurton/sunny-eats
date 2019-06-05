@@ -33,6 +33,10 @@ namespace SunnyEats
             cmbxCategory.ItemsSource = categories;
             ListViewSteps.ItemsSource = steps;
             listViewIngredients.ItemsSource = ingredients;
+
+            recipe = new Recipe();
+            recipe.ID = -1;
+            isNew = true;
         }
 
         public RecipeWindow(Recipe recipe) : this()
@@ -41,9 +45,8 @@ namespace SunnyEats
             DataContext = this.recipe;
 
             // Populate steps and ingredients
-            if (recipe != null)
+            if (!isNew)
             {
-
                 steps = new ObservableCollection<RecipeStep>(dbContext.RecipeSteps.Where(Step => Step.RecipeID == recipe.ID));
                 ingredients = new ObservableCollection<Ingredient>(dbContext.Ingredients.Where(Ing => Ing.RecipeID == recipe.ID));
 
@@ -62,6 +65,8 @@ namespace SunnyEats
                 UpdateAndCorrectSteps();
                 ListViewIngredients_Update();
             }
+
+            isNew = false;
         }
 
         // Used for updating current recipe
@@ -74,6 +79,7 @@ namespace SunnyEats
         // Used for verification checking
         bool stepsHaveChanged = false;
         bool ingredientChanged = false;
+        bool isNew = false;
 
         // If an item is going to be overriden, these variables will be overriden
         private Ingredient selIngredient;
@@ -140,7 +146,7 @@ namespace SunnyEats
             string serves;
             string calkPerServe;
 
-            if (recipe != null)
+            if (!isNew)
             {
                 // Populate variable data with the original recipe data
                 name = recipe.Name;
@@ -204,7 +210,7 @@ namespace SunnyEats
         /// <returns></returns>
         private bool UserWantsToOverwriteMessage()
         {
-            if (recipe != null)
+            if (!isNew)
             {
                 string message = "Are you sure you wan't to overwrite " + recipe.Name + "?";
                 string caption = "Overwrite existing recipe";
@@ -233,7 +239,7 @@ namespace SunnyEats
         /// </summary>
         private void SaveRecipe()
         {
-            recipe = recipe != null ? recipe : new Recipe();
+            recipe = !isNew ? recipe : new Recipe();
             recipe.Name = txbxName.Text;
             recipe.Description = txbxDescription.Text;
             recipe.NumberOfServes = txbxNumServes.Text;
@@ -260,7 +266,7 @@ namespace SunnyEats
                 if (AreInputsValid())
                 {
                     // If recipe is not null, then overwrite an already existing recipe
-                    if (recipe != null)
+                    if (!isNew)
                     {
                         if (UserWantsToOverwriteMessage())
                         {
@@ -279,9 +285,11 @@ namespace SunnyEats
                     // Otherwise save a new recipe
                     else
                     {
+                        // Save a new recipe
                         SaveRecipe();
                         dbContext.Recipes.Add(recipe);
                         dbContext.SaveChanges();
+
                         MainWindow main = Owner as MainWindow;
                         main.ListViewRecipes_Update();
                         closeFromSave = true;

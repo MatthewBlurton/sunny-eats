@@ -8,28 +8,29 @@ using System.Threading.Tasks;
 namespace SunnyEats.Favourites
 {
     [Serializable()]
-    class Favourite : ISerializable
+    public class Favourite : ISerializable
     {
+        public Favourite() { }
         public Favourite(int[] id)
         {
-            ID = id;
+            IDS = id;
         }
         public Favourite(SerializationInfo info, StreamingContext context)
         {
-            ID = info.GetValue("Id", typeof(int[])) as int[];
+            IDS = info.GetValue("Ids", typeof(int[])) as int[];
         }
 
-        private int[] _id;
+        private int[] _ids;
 
-        public int[] ID
+        public int[] IDS
         {
-            get { return _id; }
-            set => _id = value;
+            get { return _ids; }
+            set => _ids = value;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Id", ID);
+            info.AddValue("Ids", IDS);
         }
     }
 }
