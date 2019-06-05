@@ -25,7 +25,8 @@ namespace SunnyEats
             InitializeComponent();
 
             this.recipe = recipe;
-            this.ingredient = new Ingredient();
+            ingredient = new Ingredient();
+
             ingredient.RecipeID = recipe.ID;
         }
 

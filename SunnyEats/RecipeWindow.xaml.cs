@@ -28,7 +28,6 @@ namespace SunnyEats
             listViewIngredients.ItemsSource = ingredients;
 
             recipe = new Recipe();
-            recipe.ID = -1;
             isNew = true;
         }
 
