@@ -414,11 +414,20 @@ namespace SunnyEats
             }
             else
             {
-                var dbIngredient = dbContext.Ingredients.Where(Ing => Ing.ID == ingredient.ID).First();
-                dbIngredient = ingredient;
+                try
+                {
+                    var dbIngredient = dbContext.Ingredients.Where(Ing => Ing.ID == selIngredient.ID).First();
+                    dbIngredient = ingredient;
+                }
+                // If there is no dbIngredient in the database that means that the current ingredient is new, so add it instead
+                catch (InvalidOperationException)
+                {
+                    dbContext.Ingredients.Add(ingredient);
+                }
+
             }
             // Update ingredients list view
-            listViewIngredients.ItemsSource = ingredients;
+            ListViewIngredients_Update();
         }
 
         /// <summary>
@@ -530,8 +539,16 @@ namespace SunnyEats
             // If an already existing step is selected, update it
             else
             {
-                var stepToUpdate = dbContext.RecipeSteps.Where(Stp => Stp.ID == step.ID).First();
-                stepToUpdate = step;
+                try
+                {
+                    var dbStep = dbContext.RecipeSteps.Where(Ing => Ing.ID == selIngredient.ID).First();
+                    dbStep = step;
+                }
+                // If there is no dbStep in the database that means that the current step is new, so add it instead
+                catch (InvalidOperationException)
+                {
+                    dbContext.RecipeSteps.Add(step);
+                }
             }
 
             // Update ingredients list view
