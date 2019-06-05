@@ -14,10 +14,13 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Menu Height="22" VerticalAlignment="Top">
-            <MenuItem Header="_Favourite" >
-                <MenuItem x:Name="MenuItemFavouriteConfig" Header="Import/Export File_Type" Click="MenuItemFavouriteConfig_Click" />
-                <MenuItem x:Name="MenuItemFavouriteImport" Header="_Import" Click="MenuItemFavouriteImport_Click" />
-                <MenuItem x:Name="MenuItemFavouriteExport" Header="_Export" Click="MenuItemFavouriteExport_Click" />
+            <MenuItem Header="_File" >
+                <MenuItem x:Name="MenuItemFavouriteConfig" Header="_Favourite Settings" Click="MenuItemFavouriteConfig_Click" />
+                <MenuItem x:Name="MenuItemFavouriteImport" Header="_Save Favourites" Click="MenuItemFavouriteImport_Click" />
+                <MenuItem x:Name="MenuItemFavouriteExport" Header="_Load Favourites" Click="MenuItemFavouriteExport_Click" />
+                <Separator />
+                <MenuItem Header="E_xit" Click="MenuItemExit_Click"/>
+
             </MenuItem>
         </Menu>
         <Label FontFamily="Matura MT Script Capitals" Content="Recipe List" VerticalAlignment="Top" FontSize="24" FontWeight="Bold" d:LayoutOverrides="VerticalAlignment, Width" Margin="0,27,0,0" HorizontalAlignment="Center"/>
