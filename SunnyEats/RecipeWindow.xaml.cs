@@ -1,25 +1,18 @@
 ﻿using SunnyEats.EntityDataModel;
 using SunnyEats.EntityDataModel.Tables;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SunnyEats
 {
     public partial class RecipeWindow : Window
     {
+        /// <summary>
+        /// This constructor is used when creating a new recipe
+        /// </summary>
         public RecipeWindow()
         {
             InitializeComponent();
@@ -39,32 +32,32 @@ namespace SunnyEats
             isNew = true;
         }
 
+        /// <summary>
+        /// This constructor is used when updating an already existing recipe. It populates both steps and ingredients
+        /// </summary>
+        /// <param name="recipe"></param>
         public RecipeWindow(Recipe recipe) : this()
         {
             this.recipe = dbContext.Recipes.First(Rec => Rec.ID == recipe.ID);
             DataContext = this.recipe;
 
             // Populate steps and ingredients
-            if (!isNew)
+            steps = new ObservableCollection<RecipeStep>(dbContext.RecipeSteps.Where(Step => Step.RecipeID == recipe.ID));
+            ingredients = new ObservableCollection<Ingredient>(dbContext.Ingredients.Where(Ing => Ing.RecipeID == recipe.ID));
+
+            // Poor performance, need to figure out a LINQ query to replace the for loop
+            // Used to select the correct category
+            for (int i = 0; i < cmbxCategory.Items.Count; i++)
             {
-                steps = new ObservableCollection<RecipeStep>(dbContext.RecipeSteps.Where(Step => Step.RecipeID == recipe.ID));
-                ingredients = new ObservableCollection<Ingredient>(dbContext.Ingredients.Where(Ing => Ing.RecipeID == recipe.ID));
-
-                // Poor performance, need to figure out a LINQ query to replace the for loop
-                // Used to select the correct category
-                for (int i = 0; i < cmbxCategory.Items.Count; i++)
+                Category currentCat = (Category)cmbxCategory.Items[i];
+                if (currentCat.ID == this.recipe.CategoryID)
                 {
-                    Category currentCat = (Category)cmbxCategory.Items[i];
-                    if (currentCat.ID == this.recipe.CategoryID)
-                    {
-                        cmbxCategory.SelectedIndex = i;
-                        break;
-                    }
+                    cmbxCategory.SelectedIndex = i;
+                    break;
                 }
-
-                UpdateAndCorrectSteps();
-                ListViewIngredients_Update();
             }
+            UpdateAndCorrectSteps();
+            ListViewIngredients_Update();
 
             isNew = false;
         }
@@ -162,25 +155,25 @@ namespace SunnyEats
                 if (selCategory != null) selCategoryID = selCategory.ID;
 
                 // Check for any changes between the source variables and the inputs in the window, if there are any differences return true.
-                if (txbxName.Text != name)                          return true;
-                if (txbxDescription.Text != desc)                   return true;
-                if (selCategoryID != catId)                         return true;
-                if (txbxPrepTime.Text != prepTime)                  return true;
-                if (txbxNumServes.Text != serves)                   return true;
-                if (txbxCalkJPerServe.Text != calkPerServe)         return true;
-                if (ingredientChanged)                              return true;
-                if (stepsHaveChanged)                                    return true;
+                if (txbxName.Text != name) return true;
+                if (txbxDescription.Text != desc) return true;
+                if (selCategoryID != catId) return true;
+                if (txbxPrepTime.Text != prepTime) return true;
+                if (txbxNumServes.Text != serves) return true;
+                if (txbxCalkJPerServe.Text != calkPerServe) return true;
+                if (ingredientChanged) return true;
+                if (stepsHaveChanged) return true;
             }
             else
             {
-                if (txbxName.Text != "")                    return true;
-                if (txbxDescription.Text != "")             return true;
-                if (cmbxCategory.SelectedItem != null)      return true;
-                if (txbxPrepTime.Text != "")                return true;
-                if (txbxNumServes.Text != "")               return true;
-                if (txbxCalkJPerServe.Text != "")           return true;
-                if (listViewIngredients.Items.Count > 0)    return true;
-                if (ListViewSteps.Items.Count > 0)          return true;
+                if (txbxName.Text != "") return true;
+                if (txbxDescription.Text != "") return true;
+                if (cmbxCategory.SelectedItem != null) return true;
+                if (txbxPrepTime.Text != "") return true;
+                if (txbxNumServes.Text != "") return true;
+                if (txbxCalkJPerServe.Text != "") return true;
+                if (listViewIngredients.Items.Count > 0) return true;
+                if (ListViewSteps.Items.Count > 0) return true;
             }
 
             return false;
@@ -346,7 +339,7 @@ namespace SunnyEats
         /// <param name="e"></param>
         private void EditIngredient_Click(object sender, RoutedEventArgs e)
         {
-            Ingredient ingredient = (Ingredient) listViewIngredients.SelectedItem;
+            Ingredient ingredient = (Ingredient)listViewIngredients.SelectedItem;
             if (ingredient != null)
             {
                 // Set the currently selected ingredient to the ListView's currently selected ingredient. This will be overriden
@@ -365,7 +358,7 @@ namespace SunnyEats
                 var icon = MessageBoxImage.Error;
                 MessageBox.Show(messageBoxText, caption, button, icon);
             }
-            
+
         }
 
         /// <summary>
@@ -390,7 +383,7 @@ namespace SunnyEats
                 icon = MessageBoxImage.Warning;
 
                 // Double check with the user before deleting the ingredient
-                if (MessageBox.Show(message,caption,button,icon) == MessageBoxResult.Yes)
+                if (MessageBox.Show(message, caption, button, icon) == MessageBoxResult.Yes)
                 {
                     // Delete the ingredient
                     ingredients.Remove(ingredient);
@@ -540,7 +533,7 @@ namespace SunnyEats
                 var stepToUpdate = dbContext.RecipeSteps.Where(Stp => Stp.ID == step.ID).First();
                 stepToUpdate = step;
             }
-            
+
             // Update ingredients list view
             UpdateAndCorrectSteps();
         }
