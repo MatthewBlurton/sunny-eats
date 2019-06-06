@@ -38,7 +38,7 @@ namespace SunnyEats
 
             DataContext = this.ingredient;
 
-            btnSubmit.Content = "Overwrite";
+            ButtonSubmit.Content = "Overwrite";
         }
 
         public readonly Recipe recipe;
@@ -55,8 +55,8 @@ namespace SunnyEats
             {
                 if (IsFormValid())
                 {
-                    ingredient.Name = txbxIngredient.Text;
-                    ingredient.Quantity = txbxQuantity.Text;
+                    ingredient.Name = TextBoxIngredient.Text;
+                    ingredient.Quantity = TextBoxQuantity.Text;
 
                     var parent = Owner as RecipeWindow;
                     parent.UpdateIngredient(ingredient);
@@ -72,8 +72,8 @@ namespace SunnyEats
                     {
                         if (OverwriteExistingMessage())
                         {
-                            ingredient.Name = txbxIngredient.Text;
-                            ingredient.Quantity = txbxQuantity.Text;
+                            ingredient.Name = TextBoxIngredient.Text;
+                            ingredient.Quantity = TextBoxQuantity.Text;
 
                             var parent = Owner as RecipeWindow;
                             parent.UpdateIngredient(ingredient);
@@ -87,7 +87,7 @@ namespace SunnyEats
             }
 
             saving = true;
-            this.Close();
+            Close();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -118,7 +118,7 @@ namespace SunnyEats
 
             var valid = true;
 
-            if (txbxIngredient.Text == "")
+            if (TextBoxIngredient.Text == "")
             {
                 message = "Ingredient must have atleast 1 character";
                 valid = false;
@@ -130,8 +130,8 @@ namespace SunnyEats
 
         private bool AreThereChanges()
         {
-            string ingredient = txbxIngredient.Text;
-            string quantity = txbxQuantity.Text;
+            string ingredient = TextBoxIngredient.Text;
+            string quantity = TextBoxQuantity.Text;
             if (ingredient != this.ingredient.Name) return true;
             if (quantity != this.ingredient.Quantity) return true;
             return false;

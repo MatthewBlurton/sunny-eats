@@ -32,7 +32,7 @@ namespace SunnyEats
         }
 
         /// <summary>
-        /// This constructor is used when updating an already existing recipe. It populates both steps and ingredients
+        /// This constructor is used for updating an already existing recipe. It populates both steps and ingredients
         /// </summary>
         /// <param name="recipe"></param>
         public RecipeWindow(Recipe recipe) : this()
@@ -87,9 +87,7 @@ namespace SunnyEats
         private bool AreInputsValid()
         {
             // Variables to validate
-            var name = txbxName.Text;
-            var prep = txbxPrepTime.Text;
-            var numS = txbxNumServes.Text;
+            var name = TextBoxName.Text;
             var ingCount = ingredients.Count;
             var stepCount = steps.Count;
 
@@ -125,7 +123,7 @@ namespace SunnyEats
         }
 
         /// <summary>
-        /// Checks the recipes for changes
+        /// Checks the current recipe for any changes made in the form
         /// </summary>
         /// <returns>true if recipes data values does not equal the form input entries</returns>
         private bool AreThereChanges()
@@ -154,22 +152,22 @@ namespace SunnyEats
                 if (selCategory != null) selCategoryID = selCategory.ID;
 
                 // Check for any changes between the source variables and the inputs in the window, if there are any differences return true.
-                if (txbxName.Text != name) return true;
+                if (TextBoxName.Text != name) return true;
                 if (txbxDescription.Text != desc) return true;
                 if (selCategoryID != catId) return true;
-                if (txbxPrepTime.Text != prepTime) return true;
-                if (txbxNumServes.Text != serves) return true;
+                if (TextBoxPrepTime.Text != prepTime) return true;
+                if (TextBoxNumServes.Text != serves) return true;
                 if (txbxCalkJPerServe.Text != calkPerServe) return true;
                 if (ingredientChanged) return true;
                 if (stepsHaveChanged) return true;
             }
             else
             {
-                if (txbxName.Text != "") return true;
+                if (TextBoxName.Text != "") return true;
                 if (txbxDescription.Text != "") return true;
                 if (cmbxCategory.SelectedItem != null) return true;
-                if (txbxPrepTime.Text != "") return true;
-                if (txbxNumServes.Text != "") return true;
+                if (TextBoxPrepTime.Text != "") return true;
+                if (TextBoxNumServes.Text != "") return true;
                 if (txbxCalkJPerServe.Text != "") return true;
                 if (listViewIngredients.Items.Count > 0) return true;
                 if (ListViewSteps.Items.Count > 0) return true;
@@ -232,17 +230,15 @@ namespace SunnyEats
         private void SaveRecipe()
         {
             recipe = !isNew ? recipe : new Recipe();
-            recipe.Name = txbxName.Text;
+            recipe.Name = TextBoxName.Text;
             recipe.Description = txbxDescription.Text;
-            recipe.NumberOfServes = txbxNumServes.Text;
-            recipe.PrepTime = txbxPrepTime.Text;
+            recipe.NumberOfServes = TextBoxNumServes.Text;
+            recipe.PrepTime = TextBoxPrepTime.Text;
             recipe.Cal_kJ_PerServe = txbxCalkJPerServe.Text;
 
             var category = cmbxCategory.SelectedItem as Category;
             if (category != null) recipe.CategoryID = category.ID;
             recipe.Category = category;
-            //recipe.Ingredients = ingredients;
-            //recipe.RecipeSteps = steps;
         }
 
         /// <summary>
@@ -595,6 +591,11 @@ namespace SunnyEats
         #endregion
 
         #region Move recipe steps
+        /// <summary>
+        /// Swaps the number for two steps in the step list.
+        /// </summary>
+        /// <param name="isNext">Determines whether to swap either the next step, or the previous step.</param>
+        /// <param name="step">The step that is going to be swapped</param>
         private void SwapSteps(bool isNext, RecipeStep step)
         {
             // Shorthand if else, if isNext is true then swap with the next number otherwise swap with the previous number
@@ -637,12 +638,22 @@ namespace SunnyEats
             ListViewSteps.SelectedItem = step;
         }
 
+        /// <summary>
+        /// Swap the currently selected step number with the previous step number
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonStepMoveUp_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             SwapSteps(false, button.CommandParameter as RecipeStep);
         }
 
+        /// <summary>
+        /// Swap the currently selected step number with the next step number
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonStepMoveDown_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -650,6 +661,11 @@ namespace SunnyEats
         }
         #endregion
 
+        /// <summary>
+        /// This window can only be reached via MainWindow, so upon being closed the Owner becomes the main focus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closed(object sender, EventArgs e)
         {
             Owner.Focus();

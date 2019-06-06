@@ -37,6 +37,12 @@ namespace SunnyEats
         private ObservableCollection<Ingredient> ingredients;
         private ObservableCollection<RecipeStep> steps;
 
+        /// <summary>
+        /// On load use the currently selected recipe (determined by constructor) to populate the window with
+        /// values
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             foreach (var ingredient in recipe.Ingredients)

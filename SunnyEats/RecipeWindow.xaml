@@ -23,7 +23,7 @@
                     <!--Category.ID-->
                     <!--Name-->
                     <Label Content="Name" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txbxName" Height="23" Margin="10,26,10,0" TextWrapping="NoWrap" VerticalAlignment="Top" MaxLength="50"
+                    <TextBox x:Name="TextBoxName" Height="23" Margin="10,26,10,0" TextWrapping="NoWrap" VerticalAlignment="Top" MaxLength="50"
                         Text="{Binding Name, Mode=OneTime}" />
                     <!-- Description -->
                     <Label Content="Description" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top"/>
@@ -39,11 +39,11 @@
 
                     <!--PrepTime-->
                     <Label Content="Preparation Time" HorizontalAlignment="Left" Margin="10,207,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txbxPrepTime" HorizontalAlignment="Left" Height="23" Margin="10,233,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
+                    <TextBox x:Name="TextBoxPrepTime" HorizontalAlignment="Left" Height="23" Margin="10,233,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
                              Text="{Binding PrepTime, Mode=OneTime}"/>
                     <!--NumberOfServes-->
                     <Label Content="Number of Serves" HorizontalAlignment="Left" Margin="10,261,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txbxNumServes" HorizontalAlignment="Left" Height="23" Margin="10,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
+                    <TextBox x:Name="TextBoxNumServes" HorizontalAlignment="Left" Height="23" Margin="10,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"
                              Text="{Binding NumberOfServes, Mode=OneTime}"/>
                     <!--Cal_kJ_PerServe-->
                     <Label Content="Calories or Kilojules Per Serve" HorizontalAlignment="Left" Margin="10,315,0,0" VerticalAlignment="Top"/>

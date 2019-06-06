@@ -16,7 +16,7 @@
         <Menu Height="22" VerticalAlignment="Top">
             <MenuItem Header="_File" >
                 <MenuItem x:Name="MenuItemFavouriteConfig" Header="_Favourite Settings" Click="MenuItemFavouriteConfig_Click" />
-                <MenuItem x:Name="MenuItemFavouriteImport" Header="_Save Favourites" Click="MenuItemFavouriteImport_Click" />
+                <MenuItem x:Name="MenuItemFavouriteImport" Header="_Save Favourites" Click="MenuItemFavouriteLoad_Click" />
                 <MenuItem x:Name="MenuItemFavouriteExport" Header="_Load Favourites" Click="MenuItemFavouriteExport_Click" />
                 <Separator />
                 <MenuItem Header="E_xit" Click="MenuItemExit_Click"/>

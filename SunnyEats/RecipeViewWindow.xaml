@@ -21,7 +21,7 @@
         <Label FontFamily="Matura MT Script Capitals" Content="{Binding Path=Name, FallbackValue=Recipe}" Margin="10,10,10,0" VerticalAlignment="Top"
                HorizontalAlignment="Center" FontSize="36" FontWeight="Bold"/>
 
-        <ScrollViewer x:Name="svrContent" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10,10,0,0" Grid.Row="1">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10,10,0,0" Grid.Row="1">
             <WrapPanel Width="{Binding ElementName=svrContent, Path=ViewportWidth}">
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal">

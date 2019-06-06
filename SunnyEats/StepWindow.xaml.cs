@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace SunnyEats
 {
-    /// <summary>
-    /// Interaction logic for StepWindow.xaml
-    /// </summary>
     public partial class StepWindow : Window
     {
         public StepWindow(Recipe recipe)
@@ -36,7 +33,7 @@ namespace SunnyEats
 
             isNew = false;
 
-            btnAdd.Content = "Overwrite";
+            ButtonAdd.Content = "Overwrite";
         }
 
         private Recipe recipe;
@@ -46,6 +43,12 @@ namespace SunnyEats
         // Used to check if the current step is a new step
         private bool isNew = true;
 
+        /// <summary>
+        /// If there are changes to an existing ingredient then ask the user if they are sure they want to override the previous ingredient, and if so close.
+        /// Otherwise if it is a new ingredient, just save without prompting
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             if (isNew)
@@ -83,11 +86,21 @@ namespace SunnyEats
             this.Close();
         }
 
+        /// <summary>
+        /// Close the window if cancel is selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
 
+        /// <summary>
+        /// If the application hasn't saved then check if there are changes, and if so warn the user before closing the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!saving)
@@ -102,6 +115,10 @@ namespace SunnyEats
             }
         }
 
+        /// <summary>
+        /// Validate the current form
+        /// </summary>
+        /// <returns>true if all the requirements of the form are met</returns>
         private bool IsFormValid()
         {
             var message = "";
@@ -121,6 +138,10 @@ namespace SunnyEats
             return valid;
         }
 
+        /// <summary>
+        /// Checks if there are differences between the initial ingredient, and the form
+        /// </summary>
+        /// <returns>true if there are changes between the form and the initial ingredient</returns>
         private bool AreThereChanges()
         {
             string description = txbxDescription.Text;
@@ -128,6 +149,10 @@ namespace SunnyEats
             return false;
         }
 
+        /// <summary>
+        /// Display a message box warning the user that they are about to close without saving.
+        /// </summary>
+        /// <returns>true if the user agrees to lose there changes.</returns>
         private bool ExitWithoutSavingMessage()
         {
             string message = "You have unsaved changes, are you sure you want to close this step without saving?";
@@ -141,6 +166,10 @@ namespace SunnyEats
             return true;
         }
 
+        /// <summary>
+        /// Warn the user that they are about to replace an already existing step
+        /// </summary>
+        /// <returns>true if the user is willing to overwrite an already existing recipe</returns>
         private bool OverwriteExistingMessage()
         {
             string message = "Are you sure you wan't to overwrite the current step?";
@@ -154,6 +183,11 @@ namespace SunnyEats
             return false;
         }
 
+        /// <summary>
+        /// Makes the Owner of this window the main focus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closed(object sender, EventArgs e)
         {
             Owner.Focus();

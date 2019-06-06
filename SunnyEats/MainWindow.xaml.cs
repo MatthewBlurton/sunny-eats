@@ -13,16 +13,13 @@ using WPFCustomMessageBox;
 
 namespace SunnyEats
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
 
-            dBContext = new MenuDBContext();
+            dbContext = new MenuDBContext();
 
             // Set the sort
             sortDesc = false;
@@ -36,11 +33,7 @@ namespace SunnyEats
             // Set selectedFavourite to binary
             favouriteSelection = FAVOURITE_BINARY;
         }
-
-        private RecipeWindow recipeWindow;
-
-        private MenuDBContext dBContext;
-
+        private MenuDBContext dbContext;
         private ObservableCollection<Recipe> recipes;
 
         // Favourite variables
@@ -58,6 +51,9 @@ namespace SunnyEats
         private const int SORT_SERVES = 4;
         private const int SORT_CAL_KJ_SERVE = 5;
 
+        // Static Variables
+        private const string SYMBOL_FAVOURITE = "\u2605";
+
         private bool sortDesc;
         private int sortSelection;
 
@@ -68,19 +64,20 @@ namespace SunnyEats
         /// <param name="e"></param>
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            recipeWindow = new RecipeWindow();
+            var recipeWindow = new RecipeWindow();
             recipeWindow.Owner = this;
             recipeWindow.ShowDialog();
         }
 
         /// <summary>
-        /// Open a window for modifying an already existing Recipe
+        /// Open a window and send a recipe selected from ListViewRecipes
+        /// for modification
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ButtonModify_Click(object sender, RoutedEventArgs e)
         {
-            recipeWindow = new RecipeWindow((Recipe)ListViewRecipes.SelectedItem);
+            var recipeWindow = new RecipeWindow((Recipe)ListViewRecipes.SelectedItem);
             recipeWindow.Owner = this;
             recipeWindow.ShowDialog();
         }
@@ -109,7 +106,7 @@ namespace SunnyEats
         }
 
         /// <summary>
-        /// Prompt the user if they want to delete a recipe, and if so delete the recipe
+        /// Prompt the user if they want to delete a recipe, and if so delete the recipe from dbContext and the list
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -136,8 +133,8 @@ namespace SunnyEats
                 // If the user answers yes delete the recipe both from the ObservableCollection and the Database then exit the method
                 if (result == MessageBoxResult.Yes)
                 {
-                    dBContext.Recipes.Remove(selectedRecipe);
-                    dBContext.SaveChanges();
+                    dbContext.Recipes.Remove(selectedRecipe);
+                    dbContext.SaveChanges();
                     recipes.Remove(selectedRecipe);
                     ListViewRecipes_Update(false);
                     return;
@@ -148,22 +145,26 @@ namespace SunnyEats
         }
 
         /// <summary>
-        /// Toggle the isFavourite variable of all selected variables
+        /// Toggle the isFavourite variable of all selected variables.
+        /// If one item is selected as the favourite then the rest will be selected
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ButtonFavourite_Click(object sender, RoutedEventArgs e)
         {
+            // Check that there are items selected
             if (ListViewRecipes.Items.Count > 0)
             {
-                List<Recipe> selectedRecipes = new List<Recipe>(ListViewRecipes.SelectedItems.OfType<Recipe>().ToList<Recipe>());
-                if (selectedRecipes.Where<Recipe>(Rec => Rec.IsFavourite != "\u2605").Count() > 0)
+                List<Recipe> selectedRecipes = new List<Recipe>(ListViewRecipes.SelectedItems.OfType<Recipe>().ToList());
+                // If there is atleast one of the selected recipes that isn't a favourite, make all the selected items favourites
+                if (selectedRecipes.Where(Rec => Rec.IsFavourite != SYMBOL_FAVOURITE).Count() > 0)
                 {
                     foreach (var recipe in selectedRecipes)
                     {
                         recipe.IsFavourite = "true";
                     }
                 }
+                // Otherwise set all the selected items to not favourites
                 else
                 {
                     foreach (var recipe in selectedRecipes)
@@ -189,6 +190,11 @@ namespace SunnyEats
             window.Show();
         }
 
+        /// <summary>
+        /// Should a GridColumn be selected, sort the ListViewRecipes by which column was selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = sender as GridViewColumnHeader;
@@ -196,7 +202,10 @@ namespace SunnyEats
 
             switch(command)
             {
-                case "\u2605":
+                case SYMBOL_FAVOURITE:
+                    // Determine whether to sort by Ascending or Descending
+                    // Is the column active, if not set it active then sort descending.
+                    // Otherwise sort ascending
                     sortDesc = sortSelection == SORT_FAVOURITE ? !sortDesc : false;
                     sortSelection = SORT_FAVOURITE;
                     break;
@@ -226,6 +235,7 @@ namespace SunnyEats
                     break;
             }
 
+            // Update the ListViewRecipes with the new sort
             ListViewRecipes_Update(false);
         }
 
@@ -239,11 +249,11 @@ namespace SunnyEats
             if (isNew)
             {
                 // reload database data
-                dBContext = new MenuDBContext();
+                dbContext = new MenuDBContext();
 
                 // Reset recipes
                 recipes = null;
-                recipes = new ObservableCollection<Recipe>(dBContext.Recipes.ToList());
+                recipes = new ObservableCollection<Recipe>(dbContext.Recipes.ToList());
             }
 
             ObservableCollection<Recipe> filteredRecipes = recipes;
@@ -273,7 +283,7 @@ namespace SunnyEats
                      || (Rec.Category != null && Rec.Category.Name.ToUpper().Contains(searchText))));
             }
 
-            // Sort the final listview
+            // Sort the final listview based on sortSelection's value
             switch(sortSelection)
             {
                 case SORT_FAVOURITE:
@@ -328,6 +338,8 @@ namespace SunnyEats
                             filteredRecipes.OrderBy(Rec => Rec.Name));
                     break;
             }
+
+            // Update the ListView with sorted and filtered recipes
             ListViewRecipes.ItemsSource = filteredRecipes;
         }
 
@@ -386,7 +398,12 @@ namespace SunnyEats
             }
         }
 
-        private void MenuItemFavouriteImport_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Load favourites from file and update ListViewRecipes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuItemFavouriteLoad_Click(object sender, RoutedEventArgs e)
         {
             var manager = GetFavouriteManager();
 
@@ -410,6 +427,11 @@ namespace SunnyEats
             }
         }
 
+        /// <summary>
+        /// Save currently selected favourites to file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuItemFavouriteExport_Click(object sender, RoutedEventArgs e)
         {
             var manager = GetFavouriteManager();
@@ -418,7 +440,7 @@ namespace SunnyEats
             try
             {
                 List<int> recipeIDs = new List<int>();
-                foreach (var listItem in recipes.Where(Rec => Rec.IsFavourite == "\u2605"))
+                foreach (var listItem in recipes.Where(Rec => Rec.IsFavourite == SYMBOL_FAVOURITE))
                 {
                     Recipe recipe = listItem as Recipe;
                     recipeIDs.Add(recipe.ID);
@@ -427,11 +449,15 @@ namespace SunnyEats
                 Favourite favourite = new Favourite(recipeIDs.ToArray());
                 manager.WriteFile(FAVOURITE_PATH, favourite);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
 
+        /// <summary>
+        /// Choose the Favourite Manager based on the favouriteSelection
+        /// </summary>
+        /// <returns></returns>
         private IFavouriteManager GetFavouriteManager()
         {
             IFavouriteManager manager = null;
@@ -453,14 +479,14 @@ namespace SunnyEats
             return manager;
         }
 
+        /// <summary>
+        /// When Exit is clicked from the file menu this will close the current window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuItemExit_Click(object sender, RoutedEventArgs e)
         {
             Close();
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
