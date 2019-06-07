@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace SunnyEats.Favourites.FavouriteManager
 {
-    class XMLFileFavouriteManager : IFavouriteManager
+    public class XMLFileFavouriteManager : IFavouriteManager
     {
         /// <summary>
         /// Reads favourite file from external source then returns it as a class

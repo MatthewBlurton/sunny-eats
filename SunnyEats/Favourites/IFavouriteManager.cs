@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SunnyEats.Favourites
 {
-    interface IFavouriteManager
+    public interface IFavouriteManager
     {
         void WriteFile(string path, Favourite favourite);
         Favourite ReadFile(string path);

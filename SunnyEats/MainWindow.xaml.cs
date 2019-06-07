@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WPFCustomMessageBox;
@@ -77,6 +78,10 @@ namespace SunnyEats
         /// <param name="e"></param>
         private void ButtonModify_Click(object sender, RoutedEventArgs e)
         {
+            // Save current favourites to avoid losing data
+            SaveFavourites();
+
+            // Open new recipe window
             var recipeWindow = new RecipeWindow((Recipe)ListViewRecipes.SelectedItem);
             recipeWindow.Owner = this;
             recipeWindow.ShowDialog();
@@ -254,6 +259,9 @@ namespace SunnyEats
                 // Reset recipes
                 recipes = null;
                 recipes = new ObservableCollection<Recipe>(dbContext.Recipes.ToList());
+
+                // Load favourites
+                LoadFavourites();
             }
 
             ObservableCollection<Recipe> filteredRecipes = recipes;
@@ -350,6 +358,10 @@ namespace SunnyEats
         /// <param name="e"></param>
         private void ButtonCategory_Click(object sender, RoutedEventArgs e)
         {
+            // Save favourites to avoid losing changes
+            SaveFavourites();
+
+            // Open a new category window
             CategoryWindow window = new CategoryWindow();
             window.Owner = this;
             window.Show();
@@ -399,11 +411,19 @@ namespace SunnyEats
         }
 
         /// <summary>
-        /// Load favourites from file and update ListViewRecipes
+        /// Run the SaveFavourites() method
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MenuItemFavouriteLoad_Click(object sender, RoutedEventArgs e)
+        {
+            LoadFavourites();
+        }
+
+        /// <summary>
+        /// Load favourites from file and update ListViewRecipes
+        /// </summary>
+        private void LoadFavourites()
         {
             var manager = GetFavouriteManager();
 
@@ -428,11 +448,19 @@ namespace SunnyEats
         }
 
         /// <summary>
-        /// Save currently selected favourites to file
+        /// Run the SaveFavourites() command
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MenuItemFavouriteExport_Click(object sender, RoutedEventArgs e)
+        private void MenuItemFavouriteSave_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFavourites();
+        }
+
+        /// <summary>
+        /// Save currently selected favourites to file
+        /// </summary>
+        private void SaveFavourites()
         {
             var manager = GetFavouriteManager();
 

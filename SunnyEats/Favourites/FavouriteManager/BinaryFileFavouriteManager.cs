@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SunnyEats.Favourites.FavouriteManager
 {
-    class BinaryFileFavouriteManager : IFavouriteManager
+    public class BinaryFileFavouriteManager : IFavouriteManager
     {
         /// <summary>
         /// Reads favourite file from external source then returns it as a class
